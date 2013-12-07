@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    The properties in this file are specific to the infinitygemsaga flavor of the game.
+-->
+<properties>
+    <property_list>    
+        <property name="GAME_TITLE_TEXT"            value="The Infinity Gem Saga"></property>
+        <property name="WINDOW_ICON"                value="./infinitygemsaga/MarvelIcon.jpg"></property>
+        
+        <!-- BIG, FULL VIEWPORT BACKGROUND SCREEN IMAGES -->
+        <property name="SPLASH_SCREEN_IMAGE_NAME"   value="./infinitygemsaga/UIMarvelSplashBackground.gif"></property>
+        <property name="GAME_BACKGROUND_IMAGE_NAME" value="./infinitygemsaga/UIMarvelSplashBackground.gif"></property>
+		<property name="SAGA_SCREEN_IMAGE_NAME"     value="./infinitygemsaga/MarvelUtopiaScreen.gif"></property>
+        
+        <!-- GAME SCREEN NORTH TOOLBAR UI IMAGES -->
+	    <property name="UP_BUTTON_IMAGE_NAME"              value="./infinitygemsaga/up.gif"></property>
+        <property name="DOWN_BUTTON_IMAGE_NAME"  		   value="./infinitygemsaga/down.gif"></property>
+		
+		<property name="HORIZONTAL_STRIPE_IMAGE"		   value="./infinitygemsaga/up.gif"></property>
+		<property name="VERTICAL_STRIPE_IMAGE"		       value="./infinitygemsaga/down.gif"></property>
+		
+		<property name="BAXTER_IMAGE_NAME"             	   value="./infinitygemsaga/MarvelBaxterScreen.gif"></property>
+		<property name="HELICARRIER_IMAGE_NAME"            value="./infinitygemsaga/MarvelHelicarrierScreen.gif"></property>
+		<property name="ATLANTIS_IMAGE_NAME"               value="./infinitygemsaga/MarvelAtlantisScreen.gif"></property>
+		<property name="GENOSHA_IMAGE_NAME"                value="./infinitygemsaga/MarvelGenoshaScreen.gif"></property>
+		<property name="PLAY_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelPlayGame.gif"></property>
+		<property name="PLAY_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelPlayGameHighlighted.gif"></property>
+		<property name="RESET_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelResetGame.gif"></property>
+		<property name="RESET_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelResetGameHighlighted.gif"></property>
+		<property name="QUIT_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelQuitGame.gif"></property>
+		<property name="QUIT_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelQuitGameHighlighted.gif"></property>
+		
+		<property name="STATS_DIALOG_IMAGE_NAME"		   value="./infinitygemsaga/StatScreen.gif"></property>
+		<property name="STAT_PLAY_IMAGE_BUTTON"		  	   value="./infinitygemsaga/StatPlayGame.gif"></property>
+		<property name="STAT_QUIT_IMAGE_BUTTON"		  	   value="./infinitygemsaga/StatQuitGame.gif"></property>
+		<property name="STAT_PLAY_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/StatPlayGameHighlighted.gif"></property>
+		<property name="STAT_QUIT_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/StatQuitGameHighlighted.gif"></property>
+		<property name="MENU_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelQuitGame.gif"></property>
+		<property name="MENU_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelQuitGameHighlighted.gif"></property>
+		<property name="LEVEL_BACK_IMAGE_BUTTON"				   value="./infinitygemsaga/QuitLevel.gif"></property>
+		<property name="LEVEL_BACK_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/QuitLevelHighlighted.gif"></property>
+		<property name="WIN_DIALOG_IMAGE_NAME"		  		    value="./infinitygemsaga/WinScreen.gif"></property>
+		
+		<property name="GAME_GAUNTLET_TILES"						value="./infinitygemsaga/GGauntlet.png"></property>
+        
+        <!-- AUDIO FILES -->
+        <property name="SELECT_AUDIO_CUE"                   value="./infinitygemsaga/AudioinfinitygemsagaSelectTile.wav"></property>
+        <property name="MATCH_AUDIO_CUE"                    value="./infinitygemsaga/AudioinfinitygemsagaMatchFound.wav"></property>
+        <property name="NO_MATCH_AUDIO_CUE"                 value="./infinitygemsaga/AudioinfinitygemsagaTilesDoNotMatch.wav"></property>
+        <property name="BLOCKED_TILE_AUDIO_CUE"             value="./infinitygemsaga/AudioinfinitygemsagaBlockedTile.wav"></property>
+        <property name="UNDO_AUDIO_CUE"                     value="./infinitygemsaga/AudioinfinitygemsagaUndo.wav"></property>
+        <property name="WIN_AUDIO_CUE"                      value="./infinitygemsaga/AudioinfinitygemsagaWin.wav"></property>
+		<property name="LOSE_AUDIO_CUE"                     value="./infinitygemsaga/AudioinfinitygemsagaLoss.wav"></property>
+        <property name="SPLASH_SCREEN_SONG_CUE"             value="./infinitygemsaga/AudioinfinitygemsagaSplashScreenSong.mid"></property>
+        <property name="GAMEPLAY_SONG_CUE"                  value="./infinitygemsaga/AudioinfinitygemsagaInGameSong.mid"></property>
+	</property_list>
+	 <property_options_list>
+	  <property_options name="LEVEL_OPTIONS">
+            <option>./infinitygemsaga/LevelOne.zom</option>
+			<option>./infinitygemsaga/LevelTwo.zom</option>
+			<option>./infinitygemsaga/LevelThree.zom</option>
+			<option>./infinitygemsaga/LevelFour.zom</option>
+			<option>./infinitygemsaga/LevelFive.zom</option>
+			<option>./infinitygemsaga/LevelSix.zom</option>
+			<option>./infinitygemsaga/LevelSeven.zom</option>
+			<option>./infinitygemsaga/LevelEight.zom</option>
+			<option>./infinitygemsaga/LevelNine.zom</option>
+			<option>./infinitygemsaga/LevelTen.zom</option>
+        </property_options>
+		 <property_options name="LEVEL_IMAGE_OPTIONS">
+            <option>./infinitygemsaga/LevelOne.gif</option>
+            <option>./infinitygemsaga/LevelTwo.gif</option>
+			<option>./infinitygemsaga/LevelThree.gif</option>
+			<option>./infinitygemsaga/LevelFour.gif</option>
+			<option>./infinitygemsaga/LevelFive.gif</option>
+			<option>./infinitygemsaga/LevelSix.gif</option>
+			<option>./infinitygemsaga/LevelSeven.gif</option>
+			<option>./infinitygemsaga/LevelEight.gif</option>
+			<option>./infinitygemsaga/LevelNine.gif</option>
+			<option>./infinitygemsaga/LevelTen.gif</option>
+        </property_options>
+		<property_options name="GAME_TILES">
+				<option>./infinitygemsaga/GSpace.gif</option>
+				<option>./infinitygemsaga/GTime.gif</option>
+				<option>./infinitygemsaga/GSoul.gif</option>
+				<option>./infinitygemsaga/GPower.gif</option>
+				<option>./infinitygemsaga/GReality.gif</option>
+				<option>./infinitygemsaga/GMind.gif</option>
+        </property_options>
+		<property_options name="GAME_HORIZONTAL_TILES">
+				<option>./infinitygemsaga/GHSpace.gif</option>
+				<option>./infinitygemsaga/GHTime.gif</option>
+				<option>./infinitygemsaga/GHSoul.gif</option>
+				<option>./infinitygemsaga/GHPower.gif</option>
+				<option>./infinitygemsaga/GHReality.gif</option>
+				<option>./infinitygemsaga/GHMind.gif</option>
+        </property_options>
+		<property_options name="GAME_VERTICAL_TILES">
+				<option>./infinitygemsaga/GVSpace.gif</option>
+				<option>./infinitygemsaga/GVTime.gif</option>
+				<option>./infinitygemsaga/GVSoul.gif</option>
+				<option>./infinitygemsaga/GVPower.gif</option>
+				<option>./infinitygemsaga/GVReality.gif</option>
+				<option>./infinitygemsaga/GVMind.gif</option>
+        </property_options>
+		<property_options name="GAME_WRAPPED_TILES">
+				<option>./infinitygemsaga/GWSpace.gif</option>
+				<option>./infinitygemsaga/GWTime.gif</option>
+				<option>./infinitygemsaga/GWSoul.gif</option>
+				<option>./infinitygemsaga/GWPower.gif</option>
+				<option>./infinitygemsaga/GWReality.gif</option>
+				<option>./infinitygemsaga/GWMind.gif</option>
+        </property_options>
+	</property_options_list>
+</properties>
