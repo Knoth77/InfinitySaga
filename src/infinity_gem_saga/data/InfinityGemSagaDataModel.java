@@ -52,9 +52,9 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
     private String currentLevel;
     public int stars;
     public int score;
-    public int highScore;
     public int moves;
-    public int highStar;
+    public int target;
+    public int movesLimit;
 
     /**
      * Constructor for initializing this data model, it will create the data
@@ -210,6 +210,56 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         return currentLevel;
     }
 
+    public void getLevelTarget()
+    {
+        String temp = currentLevel;
+        temp = temp.substring(25);
+        switch (temp)
+        {
+            case "LevelOne.zom":
+                target = LEVEL_ONE_TARGET;
+                movesLimit = 10;
+                break;
+            case "LevelTwo.zom":
+                target = LEVEL_TWO_TARGET;
+                movesLimit = 15;
+                break;
+            case "LevelThree.zom":
+                target = LEVEL_THREE_TARGET;
+                movesLimit = 18;
+                break;
+            case "LevelFour.zom":
+                target = LEVEL_FOUR_TARGET;
+                movesLimit = 15;
+                break;
+            case "LevelFive.zom":
+                target = LEVEL_FIVE_TARGET;
+                movesLimit = 20;
+                break;
+            case "LevelSix.zom":
+                target = LEVEL_SIX_TARGET;
+                movesLimit = 16;
+                break;
+            case "LevelSeven.zom":
+                target = LEVEL_SEVEN_TARGET;
+                movesLimit = 25;
+                break;
+            case "LevelEight.zom":
+                target = LEVEL_EIGHT_TARGET;
+                movesLimit = 30;
+                break;
+            case "LevelNine.zom":
+                target = LEVEL_NINE_TARGET;
+                movesLimit = 15;
+                break;
+            case "LevelTen.zom":
+                target = LEVEL_TEN_TARGET;
+                movesLimit = 18;
+                break;
+
+        }
+    }
+
     /**
      * Accessor method for getting the number of tile columns in the game grid.
      *
@@ -270,61 +320,41 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         currentLevel = initCurrentLevel;
     }
 
-    public InfinityGemSagaGem Gauntlet(InfinityGemSagaGem gem, int bot)
+    public InfinityGemSagaGem gauntlet(InfinityGemSagaGem gem)
     {
         int spriteTypeID = 0;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
         SpriteType sT;
         String type = "";
-        type = gemGrid[gem.getGridColumn()][bot].getTileType();
+        int x = gem.getGridColumn();
+        int y = gem.getGridRow();
+        type = gemGrid[x][y].getTileType();
         String addon = GEM_GAUNTLET;
-        int arrayPos = 0;
-        switch (type)
-        {
-            case SPACE_TYPE:
-                arrayPos = 0;
-                break;
-            case TIME_TYPE:
-                arrayPos = 1;
-                break;
-            case SOUL_TYPE:
-                arrayPos = 2;
-                break;
-            case POWER_TYPE:
-                arrayPos = 3;
-                break;
-            case REALITY_TYPE:
-                arrayPos = 4;
-                break;
-            case MIND_TYPE:
-                arrayPos = 5;
-                break;
-        }
-
         String typeATiles = props.getProperty(InfinityGemSagaPropertyType.GAME_GAUNTLET_TILES);
         String imgFile = imgPath + typeATiles;
         sT = initTileSpriteType(imgFile, "" + spriteTypeID);
-        InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, getColumnPos((int) gem.getTargetX(), (int) gem.getTargetY()),
-                getRowPos((int) gem.getTargetX(), (int) gem.getTargetY()), gem.getVx(), gem.getVy(), INVISIBLE_STATE, type);
-        newTile.setTarget(gem.getTargetX(), gemGrid[gem.getGridColumn()][bot].getTargetY());
-        newTile.setGridCell(gem.getGridColumn(), bot);
+        InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, gemGrid[x][y].getX(),
+                gemGrid[x][y].getY(), gemGrid[x][y].getVx(), gemGrid[x][y].getVy(), INVISIBLE_STATE, "");
+        newTile.setTarget(gemGrid[x][y].getTargetX(), gemGrid[x][y].getTargetY());
+        newTile.setGridCell(x, y);
         newTile.setAddon(addon);
         movingGems.add(newTile);
         newTile.startMovingToTarget(MAX_TILE_VELOCITY);
-        gemGrid[gem.getGridColumn()][bot] = newTile;
+        gemGrid[gem.getGridColumn()][gem.getGridRow()] = newTile;
         gemGrid[gem.getGridColumn()][gem.getGridRow()].setState(VISIBLE_STATE);
         return newTile;
     }
 
-    public InfinityGemSagaGem wrappedGem(InfinityGemSagaGem gem, int bot)
+    public InfinityGemSagaGem wrappedGem(InfinityGemSagaGem gem)
     {
         int spriteTypeID = 0;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
         SpriteType sT;
         String type = "";
-        type = gemGrid[gem.getGridColumn()][bot].getTileType();
+        int getGridRow = gem.getGridRow();
+        type = gemGrid[gem.getGridColumn()][getGridRow].getTileType();
         String addon = GEM_WRAPPED;
         int arrayPos = 0;
         switch (type)
@@ -354,12 +384,12 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         sT = initTileSpriteType(imgFile, "" + spriteTypeID);
         InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, getColumnPos((int) gem.getTargetX(), (int) gem.getTargetY()),
                 getRowPos((int) gem.getTargetX(), (int) gem.getTargetY()), gem.getVx(), gem.getVy(), INVISIBLE_STATE, type);
-        newTile.setTarget(gem.getTargetX(), gemGrid[gem.getGridColumn()][bot].getTargetY());
-        newTile.setGridCell(gem.getGridColumn(), bot);
+        newTile.setTarget(gem.getTargetX(), gemGrid[gem.getGridColumn()][getGridRow].getTargetY());
+        newTile.setGridCell(gem.getGridColumn(), getGridRow);
         newTile.setAddon(addon);
         movingGems.add(newTile);
         newTile.startMovingToTarget(MAX_TILE_VELOCITY);
-        gemGrid[gem.getGridColumn()][bot] = newTile;
+        gemGrid[gem.getGridColumn()][getGridRow] = newTile;
         gemGrid[gem.getGridColumn()][gem.getGridRow()].setState(VISIBLE_STATE);
         return newTile;
     }
@@ -411,13 +441,14 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         return newTile;
     }
 
-    public InfinityGemSagaGem stripedVertical(InfinityGemSagaGem gem, int bot)
+    public InfinityGemSagaGem stripedVertical(InfinityGemSagaGem gem)
     {
         int spriteTypeID = 0;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
         String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
         SpriteType sT;
         String type = "";
+        int bot = gem.getGridRow();
         type = gemGrid[gem.getGridColumn()][bot].getTileType();
         String addon = GEM_VERTICAL_STRIPE;
         int arrayPos = 0;
@@ -665,6 +696,64 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         }
     }
 
+    public void cheatFour()
+    {
+        InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
+        for (int p = 0; p < gemGrid.length; p++)
+        {
+            temp[p] = gemGrid[p].clone();
+        }
+
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
+
+        ArrayList<String> typeATiles = props.getPropertyOptionsList(InfinityGemSagaPropertyType.GAME_TILES);
+        String imgFile = imgPath + typeATiles.get(3);
+        SpriteType sT = initTileSpriteType(imgFile, "" + 50);
+
+        int j = 3;
+        for (int i = 0; i < 5; i++)
+        {
+            gemGrid[i][j] = new InfinityGemSagaGem(sT, gemGrid[i][j].getX(), gemGrid[i][j].getY(),
+                    gemGrid[i][j].getVx(), gemGrid[i][j].getVy(), VISIBLE_STATE, POWER_TYPE);
+            gemGrid[i][j].setGridCell(i, j);
+            gemGrid[i][j].setTarget(temp[i][j].getTargetX(), temp[i][j].getTargetY());
+            if (i == 1)
+                j--;
+            else if (i == 2)
+                j++;
+        }
+    }
+
+    public void cheatFive()
+    {
+        InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
+        for (int p = 0; p < gemGrid.length; p++)
+        {
+            temp[p] = gemGrid[p].clone();
+        }
+
+        PropertiesManager props = PropertiesManager.getPropertiesManager();
+        String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
+
+        ArrayList<String> typeATiles = props.getPropertyOptionsList(InfinityGemSagaPropertyType.GAME_TILES);
+        String imgFile = imgPath + typeATiles.get(3);
+        SpriteType sT = initTileSpriteType(imgFile, "" + 50);
+
+        int j = 2;
+        for (int i = 5; i < 9; i++)
+        {
+            gemGrid[i][j] = new InfinityGemSagaGem(sT, gemGrid[i][j].getX(), gemGrid[i][j].getY(),
+                    gemGrid[i][j].getVx(), gemGrid[i][j].getVy(), VISIBLE_STATE, POWER_TYPE);
+            gemGrid[i][j].setGridCell(i, j);
+            gemGrid[i][j].setTarget(temp[i][j].getTargetX(), temp[i][j].getTargetY());
+            if (i == 5)
+                j--;
+            else if (i == 6)
+                j++;
+        }
+    }
+
     /**
      * This method creates and returns a textual description of the timeInMillis
      * argument as a time duration in the format of (H:MM:SS).
@@ -738,21 +827,6 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         }
     }
 
-    public void dynamicMoves()
-    {
-        InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
-        for (int i = 0; i < gemGrid.length; i++)
-            temp[i] = gemGrid[i].clone();
-
-        for (int i = 0; i < gridColumns; i++)
-        {
-            for (int j = 0; j < gridRows; j++)
-            {
-                move(temp[i][j]);
-            }
-        }
-    }
-
     /**
      * This method examines the current game grid and finds and returns a valid
      * move that is available.
@@ -766,8 +840,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         {
             for (int j = 0; j < gridRows; j++)
             {
-                //if (gemGrid[i][j].getBoardNum() != 0)
-                move(gemGrid[i][j]);
+                if (!(gemGrid[i][j].getAddon().equals(GEM_GAUNTLET)))
+                    move(gemGrid[i][j]);
             }
         }
     }
@@ -779,6 +853,10 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         boolean left;
         boolean right;
 
+        InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
+        for (int i = 0; i < gemGrid.length; i++)
+            temp[i] = gemGrid[i].clone();
+
         boolean flag = false;
 
         int col = gem.getGridColumn();
@@ -789,7 +867,7 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         //I only need to look for it with the initial gem in the middle
 
         //This one is 5 Gem conditional horizontal
-        if ((col - 2) >= 0 && (col + 2) <= gridColumns - 3)
+        if ((col - 2) >= 0 && (col + 2) < gridColumns)
         {
             if ((gemGrid[col][row]).match(gemGrid[(col - 1)][row])
                     && (gemGrid[col][row]).match(gemGrid[(col - 2)][row])
@@ -797,18 +875,23 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     && (gemGrid[col][row]).match(gemGrid[(col + 2)][row]))
             {
                 flag = true;
-                Gauntlet(gem, row);
-                dropDownHorizontal(gemGrid[(col - 1)][row]);
-                dropDownHorizontal(gemGrid[(col - 2)][row]);
-                dropDownHorizontal(gemGrid[(col + 1)][row]);
-                dropDownHorizontal(gemGrid[(col + 2)][row]);
-                score += 40;
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                removeJelly(gemGrid[col - 2][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col + 2][row]);
+                gauntlet(gem);
+                dropDown(gemGrid[(col - 1)][row]);
+                dropDown(gemGrid[(col - 2)][row]);
+                dropDown(gemGrid[(col + 1)][row]);
+                dropDown(gemGrid[(col + 2)][row]);
+                score += (80 * 5);
                 return flag;
             }
         }
 
         //5 Gem conditional for the vertical initial gem in middle
-        if ((row - 2) >= 0 && (row + 2) <= gridRows - 3)
+        if ((row - 2) >= 0 && (row + 2) < gridRows)
         {
             if ((gemGrid[col][row]).match(gemGrid[col][(row - 1)])
                     && (gemGrid[col][row]).match(gemGrid[col][(row - 2)])
@@ -816,12 +899,19 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     && (gemGrid[col][row]).match(gemGrid[col][(row + 2)]))
             {
                 flag = true;
-                dropDownVertical(gemGrid[col][(row + 2)], (row + 1));
-                dropDownVertical(gemGrid[col][(row + 1)], (row + 1));
-                Gauntlet(gem, (row + 2));
-                dropDownVertical(gemGrid[col][(row - 1)], (row + 1));
-                dropDownVertical(gemGrid[col][(row - 2)], (row + 1));
-                score += 40;
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col][row - 1]);
+                removeJelly(gemGrid[col][row - 2]);
+                removeJelly(gemGrid[col][row + 1]);
+                dropDown(gemGrid[col][(row + 1)]);
+                dropDown(gem);
+                dropDown(gemGrid[col][(row - 1)]);
+                dropDown(gemGrid[col][(row - 2)]);
+                gauntlet(gemGrid[col][(row + 2)]);
+
+
+                score += (80 * 5);
                 return flag;
             }
         }
@@ -835,27 +925,38 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     && gem.match(gemGrid[col + 1][row]) && gem.match(gemGrid[col + 2][row]))
             {
                 flag = true;
-                dropDownVertical(gemGrid[col][(row + 2)], (row + 1));
-                dropDownVertical(gemGrid[col][(row + 1)], (row + 1));
-                wrappedGem(gem, (row + 2));
-                dropDownHorizontal(gemGrid[(col + 1)][row + 1]);
-                dropDownHorizontal(gemGrid[(col + 2)][row + 2]);
-                score += 40;
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row + 2]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col + 2][row]);
+                dropDown(gem);
+                dropDown(gemGrid[col][(row + 1)]);
+                wrappedGem(gemGrid[col][(row + 2)]);
+                dropDown(gemGrid[(col + 1)][row]);
+                dropDown(gemGrid[(col + 2)][row]);
+                score += (80 * 5);
                 return flag;
             }
         }
+
         if (row <= gridRows - 3 && col >= 2)
         {
             if (gem.match(gemGrid[col][row + 1]) && gem.match(gemGrid[col][row + 2])
                     && gem.match(gemGrid[col - 1][row]) && gem.match(gemGrid[col - 2][row]))
             {
                 flag = true;
-                dropDownVertical(gemGrid[col - 1][(row + 2)], (row + 1));
-                dropDownVertical(gemGrid[col - 2][(row + 1)], (row + 1));
-                wrappedGem(gem, (row + 2));
-                dropDownHorizontal(gemGrid[col - 1][row]);
-                dropDownHorizontal(gemGrid[col - 2][row]);
-                score += 40;
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row + 2]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                removeJelly(gemGrid[col - 2][row]);
+                dropDown(gem);
+                dropDown(gemGrid[col][(row + 1)]);
+                wrappedGem(gemGrid[col][(row + 2)]);
+                dropDown(gemGrid[col - 1][row]);
+                dropDown(gemGrid[col - 2][row]);
+                score += (80 * 5);
                 return flag;
             }
         }
@@ -865,28 +966,38 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     && gem.match(gemGrid[col - 1][row]) && gem.match(gemGrid[col - 2][row]))
             {
                 flag = true;
-                wrappedGem(gem, row);
-                dropDownVertical(gemGrid[col][row - 1], row - 1);
-                dropDownVertical(gemGrid[col][row - 2], row - 1);
-                dropDownHorizontal(gemGrid[col - 1][row]);
-                dropDownHorizontal(gemGrid[col - 2][row]);
+                removeJelly(gemGrid[col][row + 2]);
+                removeJelly(gemGrid[col][row - 1]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                removeJelly(gemGrid[col - 2][row]);
+                dropDown(gemGrid[col][row - 2]);
+                dropDown(gemGrid[col][row - 1]);
+                wrappedGem(gem);
+                dropDown(gemGrid[col - 1][row]);
+                dropDown(gemGrid[col - 2][row]);
 
-                score += 40;
+                score += (80 * 5);
                 return flag;
             }
         }
-        if (row >= 2 && col <= gridColumns - 2)
+        if (row >= 2 && col <= gridColumns - 3)
         {
             if (gem.match(gemGrid[col][row - 1]) && gem.match(gemGrid[col][row - 2])
                     && gem.match(gemGrid[col + 1][row]) && gem.match(gemGrid[col + 2][row]))
             {
                 flag = true;
-                wrappedGem(gem, row);
-                dropDownVertical(gemGrid[col][row - 1], row - 1);
-                dropDownVertical(gemGrid[col][row - 2], row - 1);
-                dropDownHorizontal(gemGrid[col + 1][row]);
-                dropDownHorizontal(gemGrid[col + 2][row]);
-                score += 40;
+                removeJelly(gemGrid[col][row - 2]);
+                removeJelly(gemGrid[col][row - 1]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col + 2][row]);
+                dropDown(gemGrid[col][row - 2]);
+                dropDown(gemGrid[col][row - 1]);
+                wrappedGem(gem);
+                dropDown(gemGrid[col + 1][row]);
+                dropDown(gemGrid[col + 2][row]);
+                score += (80 * 5);
                 return flag;
             }
         }
@@ -922,13 +1033,17 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col + 1][row]);
                 }
-
-                dropDownVertical(gemGrid[col][row + 2], (row + 1));
-                dropDownVertical(gemGrid[col][row + 1], (row + 1));
-                wrappedGem(gem, (row + 2));
-                dropDownHorizontal(gemGrid[col + 1][row]);
-                dropDownHorizontal(gemGrid[col - 1][row]);
-                score += 40;
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row + 2]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                dropDown(gem);
+                dropDown(gemGrid[col][row + 1]);
+                wrappedGem(gemGrid[col][row + 2]);
+                dropDown(gemGrid[col + 1][row]);
+                dropDown(gemGrid[col - 1][row]);
+                score += (80 * 5);
                 return flag;
 
             }
@@ -961,14 +1076,17 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col + 1][row]);
                 }
-
-
-                wrappedGem(gem, row);
-                dropDownVertical(gemGrid[col][row - 1], row - 1);
-                dropDownVertical(gemGrid[col][row - 2], row - 1);
-                dropDownHorizontal(gemGrid[col + 1][row]);
-                dropDownHorizontal(gemGrid[col - 1][row]);
-                score += 40;
+                removeJelly(gemGrid[col][row - 1]);
+                removeJelly(gemGrid[col][row - 2]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                dropDown(gem);
+                dropDown(gemGrid[col][row - 1]);
+                wrappedGem(gemGrid[col][row - 2]);
+                dropDown(gemGrid[col + 1][row]);
+                dropDown(gemGrid[col - 1][row]);
+                score += (80 * 5);
                 return flag;
 
             }
@@ -981,7 +1099,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
 
         //4 Gem conditional horizontal with the initial gem being
         //the second from the top
-        if ((col - 1) >= 0 && (col + 2) <= gridColumns - 3)
+
+        if ((col - 1) >= 0 && (col + 2) < gridColumns)
         {
             if ((gemGrid[col][row]).match(gemGrid[(col - 1)][row])
                     && (gemGrid[col][row]).match(gemGrid[(col + 1)][row])
@@ -1006,19 +1125,22 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col + 2][row]);
                 }
-
-                dropDownHorizontal(gemGrid[(col + 2)][row]);
-                dropDownHorizontal(gemGrid[(col + 1)][row]);
+                removeJelly(gemGrid[col + 2][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                dropDown(gemGrid[(col + 2)][row]);
+                dropDown(gemGrid[(col + 1)][row]);
                 stripedHorizontal(gemGrid[col][row]);
-                dropDownHorizontal(gemGrid[(col - 1)][row]);
-                score += 30;
+                dropDown(gemGrid[(col - 1)][row]);
+                score += (60 * 4);
                 return flag;
             }
         }
 
         //4 Gem Conditional horizontal with the initial gem being the one
         //second from the bottom
-        if ((col + 1) <= gridColumns - 2 && (col - 2) >= 0)
+        if ((col + 1) < gridColumns && (col - 2) >= 0)
         {
             if ((gemGrid[col][row]).match(gemGrid[(col + 1)][row])
                     && (gemGrid[col][row]).match(gemGrid[(col - 1)][row])
@@ -1042,19 +1164,22 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col - 2][row]);
                 }
-
-                dropDownHorizontal(gemGrid[(col - 2)][row]);
-                dropDownHorizontal(gemGrid[(col - 1)][row]);
+                removeJelly(gemGrid[col - 2][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                dropDown(gemGrid[(col - 2)][row]);
+                dropDown(gemGrid[(col - 1)][row]);
                 stripedHorizontal(gem);
-                dropDownHorizontal(gemGrid[(col + 1)][row]);
-                score += 30;
+                dropDown(gemGrid[(col + 1)][row]);
+                score += (60 * 4);
                 return flag;
             }
         }
 
         //4 gem conditional vertical with the initial gem being
         //second from the left
-        if ((row - 1) >= 0 && (row + 2) <= gridRows - 3)
+        if ((row - 1) >= 0 && (row + 2) < gridRows)
         {
             if ((gemGrid[col][row]).match(gemGrid[col][(row - 1)])
                     && (gemGrid[col][row]).match(gemGrid[col][(row + 1)])
@@ -1079,13 +1204,16 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col][row + 2]);
                 }
+                removeJelly(gemGrid[col][row + 2]);
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col][row - 1]);
+                dropDown(gemGrid[col][(row - 1)]);
+                dropDown(gemGrid[col][row]);
+                dropDown(gemGrid[col][(row + 1)]);
+                stripedVertical(gemGrid[col][(row + 2)]);
 
-                dropDownVertical(gemGrid[col][(row + 2)], (row + 1));
-                dropDownVertical(gemGrid[col][(row + 1)], (row + 1));
-                stripedVertical(gemGrid[col][row], (row + 2));
-                dropDownVertical(gemGrid[col][(row - 1)], (row + 1));
-
-                score += 30;
+                score += (60 * 4);
                 return flag;
             }
         }
@@ -1116,12 +1244,15 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col][row - 2]);
                 }
-
-                dropDownVertical(gemGrid[col][(row + 1)], (row));
-                stripedVertical(gemGrid[col][row], (row + 1));
-                dropDownVertical(gemGrid[col][(row - 1)], (row));
-                dropDownVertical(gemGrid[col][(row - 2)], (row));
-                score += 30;
+                removeJelly(gemGrid[col][row - 2]);
+                removeJelly(gemGrid[col][row - 1]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col][row + 1]);
+                dropDown(gemGrid[col][(row - 2)]);
+                dropDown(gemGrid[col][(row - 1)]);
+                dropDown(gemGrid[col][row]);
+                stripedVertical(gemGrid[col][(row + 1)]);
+                score += (60 * 4);
                 return flag;
             }
         }
@@ -1164,9 +1295,11 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col - 2][row]);
                 }
-
+                removeJelly(gemGrid[col - 2][row]);
+                removeJelly(gemGrid[col - 1][row]);
+                removeJelly(gemGrid[col][row]);
                 dropBoardThree(gemGrid[col][row], gemGrid[col - 1][row], gemGrid[col - 2][row]);
-                score += 20;
+                score += (60 * 3);
                 return flag;
             }
         }
@@ -1189,9 +1322,11 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col][row]);
                 }
-
+                removeJelly(gemGrid[col + 2][row]);
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col][row]);
                 dropBoardThree(gemGrid[col + 2][row], gemGrid[col + 1][row], gemGrid[col][row]);
-                score += 20;
+                score += (60 * 3);
                 return flag;
             }
         }
@@ -1214,9 +1349,12 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col][row - 2]);
                 }
+                removeJelly(gemGrid[col][row - 2]);
+                removeJelly(gemGrid[col][row - 1]);
+                removeJelly(gemGrid[col][row]);
 
                 dropBoardThree(gemGrid[col][row], gemGrid[col][row - 1], gemGrid[col][row - 2]);
-                score += 20;
+                score += (60 * 3);
                 return flag;
             }
         }
@@ -1240,8 +1378,12 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col][row + 2]);
                 }
-                dropBoardThree(gemGrid[col][row], gemGrid[col][row + 1], gemGrid[col][row + 2]);
-                score += 20;
+                removeJelly(gemGrid[col][row + 2]);
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row]);
+
+                dropBoardThree(gemGrid[col][row + 2], gemGrid[col][row + 1], gemGrid[col][row]);
+                score += (60 * 3);
                 return flag;
             }
         }
@@ -1278,9 +1420,12 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col][row - 1]);
                 }
+                removeJelly(gemGrid[col][row + 1]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col][row - 1]);
 
-                dropBoardThree(gemGrid[col][row], gemGrid[col][row + 1], gemGrid[col][row - 1]);
-                score += 20;
+                dropBoardThree(gemGrid[col][row + 1], gemGrid[col][row], gemGrid[col][row - 1]);
+                score += (60 * 3);
                 return flag;
             }
         }
@@ -1303,9 +1448,11 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 {
                     dropDownAddon(gemGrid[col - 1][row]);
                 }
-
+                removeJelly(gemGrid[col + 1][row]);
+                removeJelly(gemGrid[col][row]);
+                removeJelly(gemGrid[col - 1][row]);
                 dropBoardThree(gemGrid[col + 1][row], gemGrid[col][row], gemGrid[col - 1][row]);
-                score += 20;
+                score += (60 * 3);
                 return flag;
             }
         }
@@ -1320,14 +1467,22 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         {
             case GEM_HORIZONTAL_STRIPE:
             {
-                for (int i = 0; i < getGridRows(); i++)
-                    dropDownHorizontal(gemGrid[i][gem.getGridRow()]);
+                for (int i = 0; i < getGridColumns(); i++)
+                {
+                    gemGrid[i][gem.getGridRow()].setBoardNum(1);
+                    dropDown(gemGrid[i][gem.getGridRow()]);
+                    score += 150;
+                }
                 break;
             }
             case GEM_VERTICAL_STRIPE:
             {
-                for (int i = getGridRows() - 1; i >= 0; i--)
-                    dropDownVertical(gemGrid[gem.getGridColumn()][i], getGridRows() - 1);
+                for (int i = 0; i < getGridRows(); i++)
+                {
+                    gemGrid[gem.getGridColumn()][i].setBoardNum(1);
+                    dropDown(gemGrid[gem.getGridColumn()][i]);
+                    score += 100;
+                }
                 break;
             }
             case GEM_WRAPPED:
@@ -1342,7 +1497,9 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col; j < col + 1; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
@@ -1352,7 +1509,9 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j <= col; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
@@ -1362,7 +1521,9 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col; j <= col + 1; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
@@ -1372,27 +1533,33 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j <= col + 1; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
-                else if (col > gridColumns - 1)
+                else if (col > gridColumns - 2)
                 {
                     for (int i = row - 1; i <= row + 1; i++)
                     {
                         for (int j = col - 1; j <= col; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
-                else if (row > gridRows - 1)
+                else if (row > gridRows - 2)
                 {
                     for (int i = row - 1; i <= row; i++)
                     {
                         for (int j = col - 1; j <= col + 1; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
@@ -1402,7 +1569,9 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j < col + 2; j++)
                         {
-                            dropDownHorizontal(gemGrid[j][i]);
+                            gemGrid[j][i].setBoardNum(1);
+                            dropDown(gemGrid[j][i]);
+                            score += 120;
                         }
                     }
                 }
@@ -1418,309 +1587,177 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         if (gem.match(gemGrid[i][j]))
                         {
-                            dropDownHorizontal(gemGrid[i][j]);
+                            gemGrid[i][j].setBoardNum(1);
+                            dropDown(gemGrid[i][j]);
+                            score += 150;
                         }
                     }
                 }
                 gem.setAddon(GEM_NONE_TYPE);
-                dropDownHorizontal(gem);
+                dropDown(gem);
             }
             break;
 
         }
 
-    }
-
-    public void dropDownVertical(InfinityGemSagaGem gem, int length)
-    {
-        InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
-        for (int i = 0; i < gemGrid.length; i++)
-        {
-            temp[i] = gemGrid[i].clone();
-        }
-
-        float[][] tempPosX = new float[gridColumns][gridRows];
-        float[][] tempPosY = new float[gridColumns][gridRows];
-
-
-        for (int k = 0; k < gridColumns; k++)
-        {
-            for (int p = 0; p < gridRows; p++)
-            {
-                tempPosY[k][p] = temp[k][p].getTargetY();
-                tempPosX[k][p] = temp[k][p].getTargetX();
-            }
-        }
-
-        float gemTargetX = 0;
-        float gemTargetY = 0;
-        int gemX = gem.getGridColumn();
-        int gemY = gem.getGridRow();
-        int i = gemX;
-        for (int j = gemY; j >= 0; j--)
-        {
-            if (gem.getBoardNum() == 0)
-            {
-            }
-            else if (j == 0)
-            {
-                int spriteTypeID = 0;
-                PropertiesManager props = PropertiesManager.getPropertiesManager();
-                String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
-                SpriteType sT;
-                String type = "";
-                ArrayList<String> typeATiles = props.getPropertyOptionsList(InfinityGemSagaPropertyType.GAME_TILES);
-                Random generator = new Random();
-                int z = generator.nextInt(6);
-                String imgFile = imgPath + typeATiles.get(z);
-                sT = initTileSpriteType(imgFile, "" + spriteTypeID);
-                switch (z)
-                {
-                    case 0:
-                        type = SPACE_TYPE;
-                        break;
-                    case 1:
-                        type = TIME_TYPE;
-                        break;
-                    case 2:
-                        type = SOUL_TYPE;
-                        break;
-                    case 3:
-                        type = POWER_TYPE;
-                        break;
-                    case 4:
-                        type = REALITY_TYPE;
-                        break;
-                    case 5:
-                        type = MIND_TYPE;
-                        break;
-                    default:
-                        type = GEM_TYPE;
-                        break;
-                }
-
-                InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, tempPosX[i][0], unassignedTilesY,
-                        i, 0, VISIBLE_STATE, type);
-                newTile.setTarget(tempPosX[i][0], tempPosY[i][0]);
-                newTile.setGridCell(i, 0);
-                newTile.setState(VISIBLE_STATE);
-                movingGems.add(newTile);
-                newTile.startMovingToTarget(STANDARD_TILE_VELOCITY);
-                gemGrid[i][0] = newTile;
-
-            }
-            else
-            {
-
-                gemTargetX = tempPosX[i][j];
-                gemTargetY = tempPosY[i][j];
-                InfinityGemSagaGem tile2 = temp[i][j - 1];
-                tile2.setTarget(gemTargetX, gemTargetY);
-                tile2.setGridCell(i, j);
-                movingGems.add(tile2);
-                tile2.startMovingToTarget(STANDARD_TILE_VELOCITY);
-                gemGrid[i][j] = tile2;
-            }
-        }
 
     }
 
-    public void dropDownHorizontal(InfinityGemSagaGem gem)
+    public void removeJelly(InfinityGemSagaGem gem)
     {
+        gem.setBoardNum(1);
+    }
 
-        InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
-        for (int i = 0; i < gemGrid.length; i++)
+    public void dropDown(InfinityGemSagaGem gem)
+    {
+        if (gem.getBoardNum() != 0)
         {
-            temp[i] = gemGrid[i].clone();
-        }
-
-        float[][] tempPosX = new float[gridColumns][gridRows];
-        float[][] tempPosY = new float[gridColumns][gridRows];
-
-
-        for (int k = 0; k < gridColumns; k++)
-        {
-            for (int p = 0; p < gridRows; p++)
+            InfinityGemSagaGem[][] temp = new InfinityGemSagaGem[gemGrid.length][];
+            for (int i = 0; i < gemGrid.length; i++)
             {
-                tempPosY[k][p] = temp[k][p].getTargetY();
-                tempPosX[k][p] = temp[k][p].getTargetX();
+                temp[i] = gemGrid[i].clone();
             }
-        }
 
-        float gemTargetX = 0;
-        float gemTargetY = 0;
-        int gemX = gem.getGridColumn();
-        int gemY = gem.getGridRow();
-        int i = gemX;
-        for (int j = gemY; j >= 0; j--)
-        {
-            if (gem.getBoardNum() == 0)
-            {
-                return;
-            }
-            else if (j == 0)
-            {
+            float[][] tempPosX = new float[gridColumns][gridRows];
+            float[][] tempPosY = new float[gridColumns][gridRows];
 
-                int spriteTypeID = 0;
-                PropertiesManager props = PropertiesManager.getPropertiesManager();
-                String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
-                SpriteType sT;
-                String type = "";
-                ArrayList<String> typeATiles = props.getPropertyOptionsList(InfinityGemSagaPropertyType.GAME_TILES);
-                Random generator = new Random();
-                int z = generator.nextInt(6);
-                String imgFile = imgPath + typeATiles.get(z);
-                sT = initTileSpriteType(imgFile, "" + spriteTypeID);
-                switch (z)
+
+            for (int k = 0; k < gridColumns; k++)
+            {
+                for (int p = 0; p < gridRows; p++)
                 {
-                    case 0:
-                        type = SPACE_TYPE;
-                        break;
-                    case 1:
-                        type = TIME_TYPE;
-                        break;
-                    case 2:
-                        type = SOUL_TYPE;
-                        break;
-                    case 3:
-                        type = POWER_TYPE;
-                        break;
-                    case 4:
-                        type = REALITY_TYPE;
-                        break;
-                    case 5:
-                        type = MIND_TYPE;
-                        break;
-                    default:
-                        type = GEM_TYPE;
-                        break;
+                    tempPosY[k][p] = temp[k][p].getTargetY();
+                    tempPosX[k][p] = temp[k][p].getTargetX();
                 }
-
-                InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, tempPosX[i][0], unassignedTilesY,
-                        i, 0, VISIBLE_STATE, type);
-                newTile.setTarget(tempPosX[i][0], tempPosY[i][0]);
-                newTile.setGridCell(i, 0);
-                newTile.setState(VISIBLE_STATE);
-                movingGems.add(newTile);
-                newTile.startMovingToTarget(STANDARD_TILE_VELOCITY);
-                gemGrid[i][0] = newTile;
-
             }
-            else
+
+            int gemX = gem.getGridColumn();
+            int gemY = gem.getGridRow();
+            int i = gemX;
+
+            for (int j = gemY; j >= 0; j--)
             {
 
-                gemTargetX = tempPosX[i][j];
-                gemTargetY = tempPosY[i][j];
-                int index = j;
-                while (j >= 1 && temp[i][j - 1].getBoardNum() == 0)
+                if (gemGrid[i][j].getBoardNum() != 0)
                 {
-                    j--;
-                }
-                if (j == 0)
-                {
-                    int spriteTypeID = 0;
-                    PropertiesManager props = PropertiesManager.getPropertiesManager();
-                    String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
-                    SpriteType sT;
-                    String type = "";
-                    ArrayList<String> typeATiles = props.getPropertyOptionsList(InfinityGemSagaPropertyType.GAME_TILES);
-                    Random generator = new Random();
-                    int z = generator.nextInt(6);
-                    String imgFile = imgPath + typeATiles.get(z);
-                    sT = initTileSpriteType(imgFile, "" + spriteTypeID);
-                    switch (z)
+                    int index = j - 1;
+                    while (index >= 0 && temp[i][index].getBoardNum() == 0)
                     {
-                        case 0:
-                            type = SPACE_TYPE;
-                            break;
-                        case 1:
-                            type = TIME_TYPE;
-                            break;
-                        case 2:
-                            type = SOUL_TYPE;
-                            break;
-                        case 3:
-                            type = POWER_TYPE;
-                            break;
-                        case 4:
-                            type = REALITY_TYPE;
-                            break;
-                        case 5:
-                            type = MIND_TYPE;
-                            break;
-                        default:
-                            type = GEM_TYPE;
-                            break;
+                        index--;
                     }
 
-                    InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, tempPosX[i][index], tempPosY[i][index],
-                            i, index, VISIBLE_STATE, type);
-                    newTile.setTarget(tempPosX[i][index], tempPosY[i][index]);
-                    newTile.setGridCell(i, index);
-                    newTile.setState(VISIBLE_STATE);
-                    movingGems.add(newTile);
-                    newTile.startMovingToTarget(STANDARD_TILE_VELOCITY);
-                    gemGrid[i][index] = newTile;
-                }
-                else
-                {
-                    InfinityGemSagaGem tile2 = temp[i][j - 1];
-                    tile2.setState(VISIBLE_STATE);
-                    tile2.setTarget(gemTargetX, gemTargetY);
-                    tile2.setGridCell(i, j);
-                    movingGems.add(tile2);
-                    tile2.startMovingToTarget(STANDARD_TILE_VELOCITY);
-                    gemGrid[i][j] = tile2;
+                    if (j == 0 || index == -1)
+                    {
+
+                        int spriteTypeID = 0;
+                        PropertiesManager props = PropertiesManager.getPropertiesManager();
+                        String imgPath = props.getProperty(InfinityGemSagaPropertyType.IMG_PATH);
+                        SpriteType sT;
+                        String type = "";
+                        ArrayList<String> typeATiles = props.getPropertyOptionsList(InfinityGemSagaPropertyType.GAME_TILES);
+                        Random generator = new Random();
+                        int z = generator.nextInt(6);
+                        String imgFile = imgPath + typeATiles.get(z);
+                        sT = initTileSpriteType(imgFile, "" + spriteTypeID);
+                        switch (z)
+                        {
+                            case 0:
+                                type = SPACE_TYPE;
+                                break;
+                            case 1:
+                                type = TIME_TYPE;
+                                break;
+                            case 2:
+                                type = SOUL_TYPE;
+                                break;
+                            case 3:
+                                type = POWER_TYPE;
+                                break;
+                            case 4:
+                                type = REALITY_TYPE;
+                                break;
+                            case 5:
+                                type = MIND_TYPE;
+                                break;
+                            default:
+                                type = GEM_TYPE;
+                                break;
+                        }
+
+                        InfinityGemSagaGem newTile = new InfinityGemSagaGem(sT, tempPosX[i][j], unassignedTilesY,
+                                i, j, VISIBLE_STATE, type);
+                        newTile.setTarget(tempPosX[i][j], tempPosY[i][j]);
+                        newTile.setGridCell(i, j);
+                        newTile.setState(VISIBLE_STATE);
+                        movingGems.add(newTile);
+                        newTile.startMovingToTarget(STANDARD_TILE_VELOCITY);
+                        gemGrid[i][j] = newTile;
+
+                    }
+                    else if (index >= 0)
+                    {
+
+                        float gemTargetX = tempPosX[i][j];
+                        float gemTargetY = tempPosY[i][j];
+                        InfinityGemSagaGem tile2 = new InfinityGemSagaGem(temp[i][index].getSpriteType(), temp[i][index].getX(), temp[i][index].getY(), temp[i][index].getVx(), temp[i][index].getVy(), VISIBLE_STATE,
+                                temp[i][index].getTileType());
+                        tile2.setState(VISIBLE_STATE);
+                        tile2.setTarget(gemTargetX, gemTargetY);
+                        tile2.setGridCell(i, j);
+                        tile2.setBoardNum(gemGrid[i][j].getBoardNum());
+                        movingGems.add(tile2);
+                        tile2.startMovingToTarget(STANDARD_TILE_VELOCITY);
+                        gemGrid[i][j] = tile2;
+                    }
                 }
             }
         }
-
     }
 
     public void dropBoardThree(InfinityGemSagaGem one, InfinityGemSagaGem two, InfinityGemSagaGem three)
     {
         if (one.getGridRow() == two.getGridRow())
         {
-            dropDownHorizontal(one);
-            dropDownHorizontal(two);
-            dropDownHorizontal(three);
+            dropDown(one);
+            dropDown(two);
+            dropDown(three);
         }
         else
         {
             if (one.getGridRow() < two.getGridRow() && one.getGridRow() < three.getGridRow())
             {
-                dropDownVertical(one, one.getGridRow());
+                dropDown(one);
                 if (two.getGridRow() < three.getGridRow())
-                    dropDownVertical(two, one.getGridRow());
+                    dropDown(two);
                 else
-                    dropDownVertical(three, one.getGridRow());
+                    dropDown(three);
             }
             else if (two.getGridRow() < three.getGridRow())
             {
-                dropDownVertical(two, two.getGridRow());
+                dropDown(two);
                 if (one.getGridColumn() < three.getGridRow())
                 {
-                    dropDownVertical(one, two.getGridRow());
-                    dropDownVertical(three, two.getGridRow());
+                    dropDown(one);
+                    dropDown(three);
                 }
                 else
                 {
-                    dropDownVertical(three, two.getGridRow());
-                    dropDownVertical(one, two.getGridRow());
+                    dropDown(three);
+                    dropDown(one);
                 }
             }
             else
             {
-                dropDownVertical(three, three.getGridRow());
+                dropDown(three);
                 if (one.getGridRow() < two.getGridRow())
                 {
-                    dropDownVertical(one, three.getGridRow());
-                    dropDownVertical(two, three.getGridRow());
+                    dropDown(one);
+                    dropDown(two);
                 }
                 else
                 {
-                    dropDownVertical(two, three.getGridRow());
-                    dropDownVertical(one, three.getGridRow());
+                    dropDown(two);
+                    dropDown(one);
                 }
             }
 
@@ -1745,16 +1782,27 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         }
 
 
-        gemGrid[move.col1][move.row1] = gemGrid[move.col2][move.row2];
-        gemGrid[move.col2][move.row2] = temp[move.col1][move.row1];
 
-        InfinityGemSagaGem tile1 = gemGrid[move.col1][move.row1];
-        InfinityGemSagaGem tile2 = gemGrid[move.col2][move.row2];
+        InfinityGemSagaGem tile1 = temp[move.col1][move.row1];
+        InfinityGemSagaGem tile2 = temp[move.col2][move.row2];
+
+        boolean jellyFlag = false;
+        boolean jellyTwoFlag = false;
+        if (tile1.getBoardNum() == 2)
+            jellyFlag = true;
+        if (tile2.getBoardNum() == 2)
+            jellyFlag = true;
+
 
         float tempX = tile1.getX();
         float tempY = tile1.getY();
         int posX = tile1.getGridColumn();
         int posY = tile1.getGridRow();
+        int bN = tile1.getBoardNum();
+        int bNTwo = tile2.getBoardNum();
+
+        tile1.setBoardNum(bNTwo);
+        tile2.setBoardNum(bN);
 
         tile1.setTarget(tile2.getX(), tile2.getY());
         tile1.startMovingToTarget(STANDARD_TILE_VELOCITY);
@@ -1771,9 +1819,15 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         tile1.setGridCell(tile2.getGridColumn(), tile2.getGridRow());
         tile2.setGridCell(posX, posY);
 
+
+        gemGrid[move.col1][move.row1] = tile2;
+        gemGrid[move.col2][move.row2] = tile1;
+
         boolean flag = move(tile1);
         boolean flagTwo = move(tile2);
 
+        moves++;
+        movesLimit--;
         if (!flag && !flagTwo)
         {
             while (!movingGems.isEmpty())
@@ -1781,23 +1835,29 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 updateAll(miniGame);
             }
 
-            temp = gemGrid.clone();
+            InfinityGemSagaGem[][] tempz = gemGrid.clone();
             for (int i = 0; i < gridColumns; i++)
             {
-                temp[i] = gemGrid[i].clone();
+                tempz[i] = gemGrid[i].clone();
             }
 
 
-            gemGrid[move.col1][move.row1] = gemGrid[move.col2][move.row2];
-            gemGrid[move.col2][move.row2] = temp[move.col1][move.row1];
+            gemGrid[move.col1][move.row1] = tempz[move.col2][move.row2];
+            gemGrid[move.col2][move.row2] = tempz[move.col1][move.row1];
 
-            tile1 = gemGrid[move.col1][move.row1];
-            tile2 = gemGrid[move.col2][move.row2];
+            tile1 = tempz[move.col1][move.row1];
+            tile2 = tempz[move.col2][move.row2];
 
             tempX = tile1.getX();
             tempY = tile1.getY();
             posX = tile1.getGridColumn();
             posY = tile1.getGridRow();
+
+            bN = tile1.getBoardNum();
+            bNTwo = tile2.getBoardNum();
+
+            tile1.setBoardNum(bNTwo);
+            tile2.setBoardNum(bN);
 
             tile1.setTarget(tile2.getX(), tile2.getY());
             tile1.startMovingToTarget(STANDARD_TILE_VELOCITY);
@@ -1813,22 +1873,48 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
             tile1.setGridCell(tile2.getGridColumn(), tile2.getGridRow());
             tile2.setGridCell(posX, posY);
 
-            moves++;
+
+            gemGrid[move.col1][move.row1] = tile2;
+            gemGrid[move.col2][move.row2] = tile1;
+
+
+            jellyFlag = false;
+            jellyTwoFlag = false;
+            moves--;
+            movesLimit++;
         }
 
         selectedTile.setState(VISIBLE_STATE);
 
+        if ((!jellyFlag && !jellyTwoFlag))
+        {
+            for (int i = 0; i < gridColumns; i++)
+            {
+                for (int j = 0; j < gridRows; j++)
+                {
+                    if (temp[i][j].getBoardNum() == 2)
+                    {
+                        gemGrid[i][j].setBoardNum(2);
+                    }
+                    else if (temp[i][j].getBoardNum() == 0)
+                    {
+                        gemGrid[i][j].setBoardNum(0);
+                    }
+                    else
+                        gemGrid[i][j].setBoardNum(1);
+                }
+            }
+        }
+
+
+
+
         selectedTile = null;
-        moves--;
 
-        if (score > 4000)
+        if (score > target)
             endGameAsWin();
-
-
-        if (moves == 50)
+        else if (movesLimit <= 0)
             endGameAsLoss();
-
-        dynamicMoves();
 
     }
 
@@ -1863,6 +1949,11 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         {
             selectedTile.setTileType(selectTile.getTileType());
             dropDownAddon(selectedTile);
+        }
+        else if (selectedTile != null && selectTile.getAddon().equals(GEM_GAUNTLET))
+        {
+            selectTile.setTileType(selectedTile.getTileType());
+            dropDownAddon(selectTile);
         }
         else
         {
@@ -1914,6 +2005,7 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                 selectedTile.setState(SELECTED_STATE);
             }
         }
+
     }
 
     public int getRowPos(int x, int y)
@@ -2006,26 +2098,31 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         // UPDATE THE GAME STATE USING THE INHERITED FUNCTIONALITY
         super.endGameAsWin();
 
-
-        // RECORD IT AS A WIN
-        if (score > highScore)
-            highScore = score;
-
-        if (moves > 25)
-            stars = 5;
-        else if (moves > 20)
-            stars = 4;
-        else if (moves > 15)
-            stars = 3;
-        else if (moves > 10)
-            stars = 2;
-        else
+        if (score >= target)
             stars = 1;
+        if (score >= target && movesLimit > (moves / 2))
+            stars = 2;
+        if (score >= target && movesLimit > moves)
+            stars = 3;
 
-        if (stars > highStar)
-            highStar = stars;
+        // RECORD IT AS A 
+        ((InfinityGemSagaMiniGame) miniGame).getPlayerRecord().addWin(currentLevel, score, stars, true);
+        ((InfinityGemSagaMiniGame) miniGame).savePlayerRecord();
 
-        ((InfinityGemSagaMiniGame) miniGame).displayStatScreen();
+        for (int i = 0; i < gridColumns; i++)
+        {
+            for (int j = 0; j < gridRows; j++)
+            {
+                gemGrid[i][j].setX(1000000);
+                gemGrid[i][j].setY(1000000);
+                gemGrid[i][j].setTarget(1000000, 1000000);
+                gemGrid[i][j].startMovingToTarget(1000000);
+                movingGems.add(gemGrid[i][j]);
+            }
+        }
+
+        miniGame.getGUIDecor().get(WIN_DIALOG_TYPE).setState(VISIBLE_STATE);
+        //enableTiles(false);
     }
 
     @Override
@@ -2036,13 +2133,23 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         //long gameTime = endTime.getTimeInMillis() - startTime.getTimeInMillis();
 
         // RECORD IT AS A LOSE
-        ((InfinityGemSagaMiniGame) miniGame).getPlayerRecord().addLoss(currentLevel);
+        ((InfinityGemSagaMiniGame) miniGame).getPlayerRecord().addLoss(currentLevel, score, stars);
         ((InfinityGemSagaMiniGame) miniGame).savePlayerRecord();
 
-        // DISPLAY THE LOSE DIALOG
+        //enableTiles(false);
 
-        if (score > highScore)
-            highScore = score;
+        for (int i = 0; i < gridColumns; i++)
+        {
+            for (int j = 0; j < gridRows; j++)
+            {
+                gemGrid[i][j].setX(1000000);
+                gemGrid[i][j].setY(1000000);
+            }
+        }
+
+        miniGame.getGUIDecor().get(LOSE_DIALOG_TYPE).setState(VISIBLE_STATE);
+
+        // DISPLAY THE LOSE DIALOG
 
 
     }
@@ -2071,7 +2178,7 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
         // START THE CLOCK
         startTime = new GregorianCalendar();
 
-        moves = 30;
+        moves = 0;
 
         score = 0;
         // NOW LET'S REMOVE THEM FROM THE STACK
@@ -2108,7 +2215,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
             y = 100;
         }
         // AND START ALL UPDATES
-        cleanBoard();
+        //cleanBoard();
+        getLevelTarget();
         beginGame();
     }
 
@@ -2147,6 +2255,7 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
             {
                 // KEEP THE GAME TIMER GOING IF THE GAME STILL IS
                 endTime = new GregorianCalendar();
+                cleanBoard();
             }
 
         }

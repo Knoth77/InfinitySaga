@@ -2,6 +2,7 @@ package infinity_gem_saga.file;
 
 import infinity_gem_saga.InfinityGemSaga.InfinityGemSagaPropertyType;
 import infinity_gem_saga.data.InfinityGemSagaDataModel;
+import infinity_gem_saga.data.InfinityGemSagaLevelRecord;
 import infinity_gem_saga.data.InfinityGemSagaRecord;
 import infinity_gem_saga.ui.InfinityGemSagaMiniGame;
 import java.io.BufferedInputStream;
@@ -128,6 +129,23 @@ public class InfinityGemSagaFileManager
             // HERE IT IS, THE ONLY READY REQUEST WE NEED
             bis.read(bytes);
             bis.close();
+            
+            DataInputStream dis = new DataInputStream(bais);
+            
+            // NOTE THAT WE NEED TO LOAD THE DATA IN THE SAME
+            // ORDER AND FORMAT AS WE SAVED IT
+            // FIRST READ THE NUMBER OF LEVELS
+            int numLevels = dis.readInt();
+
+            for (int i = 0; i < numLevels; i++)
+            {
+                String levelName = dis.readUTF();
+                InfinityGemSagaLevelRecord rec = new InfinityGemSagaLevelRecord();
+                rec.stars = dis.readInt();
+                rec.highScore = dis.readInt();
+                rec.completed = dis.readBoolean();
+                recordToLoad.addInfinityLevelRecord(levelName, rec);
+            }
 
         }
         catch(Exception e)

@@ -18,27 +18,29 @@ import static infinity_gem_saga.InfinityGemSagaConstants.*;
  */
 public class PlayLevelHandler implements ActionListener
 {
-    
+
     private InfinityGemSagaMiniGame game;
     private String levelFile;
-    
+
     public PlayLevelHandler(InfinityGemSagaMiniGame initGame, String initLevelFile)
     {
         game = initGame;
         levelFile = initLevelFile;
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent ae)
     {
-        
+
         InfinityGemSagaDataModel data = (InfinityGemSagaDataModel) game.getDataModel();
 
         // UPDATE THE DATA
         InfinityGemSagaFileManager fileManager = game.getFileManager();
         fileManager.loadLevel(levelFile);
-        if (game.isCurrentScreenState(SAGA_SCREEN_STATE))
-            game.switchToGameScreen();
         
+        game.displayStatScreen();
+        //if (game.isCurrentScreenState(SAGA_SCREEN_STATE))
+        //    game.switchToGameScreen();
+
     }
 }

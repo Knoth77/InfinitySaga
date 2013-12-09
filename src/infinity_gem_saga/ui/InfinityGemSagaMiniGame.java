@@ -10,10 +10,9 @@ import properties_manager.PropertiesManager;
 import infinity_gem_saga.InfinityGemSaga.InfinityGemSagaPropertyType;
 import infinity_gem_saga.data.InfinityGemSagaDataModel;
 import infinity_gem_saga.data.InfinityGemSagaRecord;
-import infinity_gem_saga.events.BackToGameScreenHandler;
+import infinity_gem_saga.events.BackToSagaScreenHandler;
 import infinity_gem_saga.events.StatScreenOffHandler;
-import infinity_gem_saga.events.BackToMenuHandler;
-import infinity_gem_saga.events.GemHandler;
+import infinity_gem_saga.events.ExitAppHandler;
 import infinity_gem_saga.events.InfinityKeyHandler;
 import infinity_gem_saga.events.LeftArrowHandler;
 import infinity_gem_saga.events.LevelButtonHandler;
@@ -22,6 +21,8 @@ import infinity_gem_saga.events.PlayGameHandler;
 import infinity_gem_saga.events.PlayLevelHandler;
 import infinity_gem_saga.events.QuitGameHandler;
 import infinity_gem_saga.events.ResetGameHandler;
+import infinity_gem_saga.events.StatPlayHandler;
+import infinity_gem_saga.events.TryAgainHandler;
 import infinity_gem_saga.file.InfinityGemSagaFileManager;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
     // THE SCREEN CURRENTLY BEING PLAYED
     private String currentScreenState;
     public String currentImage;
+    boolean isStatScreen = false;
 
     // private MouseListener mouseL;
     // ACCESSOR METHODS
@@ -93,9 +95,11 @@ public class InfinityGemSagaMiniGame extends MiniGame
 
     public void switchToSagaScreen()
     {
-
+        isStatScreen = false;
+        
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 
+        String dataPath = props.getProperty(InfinityGemSagaPropertyType.DATA_PATH);
 
         currentImage = BACKGROUND_TYPE;
         // CHANGE THE BACKGROUND
@@ -126,19 +130,50 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiButtons.get(STAT_QUIT_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(STAT_QUIT_TYPE).setEnabled(false);
 
-        guiButtons.get(MENU_TYPE).setState(VISIBLE_STATE);
-        guiButtons.get(MENU_TYPE).setEnabled(true);
+        guiDecor.get(STATS_DIALOG_TYPE).setState(INVISIBLE_STATE);
+        guiDecor.get(WIN_DIALOG_TYPE).setState(INVISIBLE_STATE);
+        guiDecor.get(LOSE_DIALOG_TYPE).setState(INVISIBLE_STATE);
+        
+        guiButtons.get(WIN_QUIT_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(WIN_QUIT_TYPE).setEnabled(false);
+        guiButtons.get(TRY_AGAIN_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(TRY_AGAIN_TYPE).setEnabled(false);
+
+
+        guiButtons.get(MM_QUIT_TYPE).setState(VISIBLE_STATE);
+        guiButtons.get(MM_QUIT_TYPE).setEnabled(true);
 
         guiButtons.get(LEVEL_BACK_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(LEVEL_BACK_TYPE).setEnabled(false);
 
         ArrayList<String> levels = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_OPTIONS);
+        boolean[] tF = new boolean[levels.size()];
+        int i = 0;
+       
         for (String level : levels)
         {
+            if (record.getCompleted(dataPath + level))
+                tF[i] = true;
+            else
+                tF[i] = false;
             guiButtons.get(level).setState(VISIBLE_STATE);
-            guiButtons.get(level).setEnabled(true);
+            i++;
         }
 
+        i = 0;
+        for (String level : levels)
+        {
+            if (i == 0)
+                guiButtons.get(level).setEnabled(true);
+            else if (tF[i - 1] == true)
+                guiButtons.get(level).setEnabled(true);
+            else
+                guiButtons.get(level).setEnabled(false);
+
+            i++;
+        }
+
+        statScreenOff();
         ((InfinityGemSagaDataModel) data).enableTiles(false);
 
         currentScreenState = SAGA_SCREEN_STATE;
@@ -146,7 +181,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
 
     public void switchToSplashScreen()
     {
-
+        isStatScreen = false;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 
         // CHANGE THE BACKGROUND
@@ -174,11 +209,18 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiButtons.get(STAT_PLAY_TYPE).setEnabled(false);
         guiButtons.get(STAT_QUIT_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(STAT_QUIT_TYPE).setEnabled(false);
-        guiButtons.get(MENU_TYPE).setState(INVISIBLE_STATE);
-        guiButtons.get(MENU_TYPE).setEnabled(false);
+        guiButtons.get(MM_QUIT_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(MM_QUIT_TYPE).setEnabled(false);
 
         guiButtons.get(LEVEL_BACK_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(LEVEL_BACK_TYPE).setEnabled(false);
+        
+        guiDecor.get(LOSE_DIALOG_TYPE).setState(INVISIBLE_STATE);
+        
+        guiButtons.get(WIN_QUIT_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(WIN_QUIT_TYPE).setEnabled(false);
+        guiButtons.get(TRY_AGAIN_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(TRY_AGAIN_TYPE).setEnabled(false);
 
         ArrayList<String> levels = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_OPTIONS);
         for (String level : levels)
@@ -195,11 +237,10 @@ public class InfinityGemSagaMiniGame extends MiniGame
 
     public void switchToGameScreen()
     {
-
+        isStatScreen = false;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
 
         guiDecor.get(BACKGROUND_TYPE).setState(GAME_SCREEN_STATE);
-
         guiButtons.get(LEVEL_BACK_TYPE).setState(VISIBLE_STATE);
         guiButtons.get(LEVEL_BACK_TYPE).setEnabled(true);
 
@@ -223,16 +264,24 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiDecor.get(GENOSHA_TYPE).setState(INVISIBLE_STATE);
 
 
+        guiButtons.get(WIN_QUIT_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(WIN_QUIT_TYPE).setEnabled(false);
+        guiButtons.get(TRY_AGAIN_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(TRY_AGAIN_TYPE).setEnabled(false);
+        
         guiButtons.get(STAT_PLAY_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(STAT_PLAY_TYPE).setEnabled(false);
         guiButtons.get(STAT_QUIT_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(STAT_QUIT_TYPE).setEnabled(false);
         guiDecor.get(STATS_DIALOG_TYPE).setState(INVISIBLE_STATE);
+        guiDecor.get(WIN_DIALOG_TYPE).setState(INVISIBLE_STATE);
+        guiDecor.get(LOSE_DIALOG_TYPE).setState(INVISIBLE_STATE);
 
-        guiButtons.get(MENU_TYPE).setState(INVISIBLE_STATE);
-        guiButtons.get(MENU_TYPE).setEnabled(false);
+        guiButtons.get(MM_QUIT_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(MM_QUIT_TYPE).setEnabled(false);
 
         ArrayList<String> levels = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_OPTIONS);
+
         for (String level : levels)
         {
             guiButtons.get(level).setState(INVISIBLE_STATE);
@@ -253,11 +302,9 @@ public class InfinityGemSagaMiniGame extends MiniGame
 
         fileManager = new InfinityGemSagaFileManager(this);
 
-        data = new InfinityGemSagaDataModel(this);
-
         record = fileManager.loadRecord();
 
-
+        data = new InfinityGemSagaDataModel(this);
 
         // LOAD THE GAME DIMENSIONS
         PropertiesManager props = PropertiesManager.getPropertiesManager();
@@ -368,20 +415,21 @@ public class InfinityGemSagaMiniGame extends MiniGame
         s = new Sprite(sT, DOWN_X, DOWN_Y, 0, 0, INVISIBLE_STATE);
         guiButtons.put(DOWN_BUTTON_TYPE, s);
 
-        /*String wings = props.getProperty(InfinityGemSagaPropertyType.IRONMAN_BUTTON_IMAGE_NAME);
-         sT = new SpriteType(IRONMAN_BUTTON_TYPE);
-         img = loadImage(imgPath + wings);
-         sT.addState(VISIBLE_STATE, img);
-         sT.addState(MOUSE_OVER_STATE, img);
-         s = new Sprite(sT, 33, 27, 0, 0, INVISIBLE_STATE);
-         guiButtons.put(IRONMAN_BUTTON_TYPE, s);*/
-
         ArrayList<String> levels = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_OPTIONS);
         ArrayList<String> levelImageNames = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_IMAGE_OPTIONS);
 
-        int levelx = 33;
-        int levely = 27;
-        
+        //int levelx = 33;
+        //int levely = 27;
+        int[] levelx =
+        {
+            33, 90, 75, 75, 105, 237, 315, 410, 390, 390
+        };
+        int[] levely =
+        {
+            27, 155, 280, 420, 552, 486, 375, 268, 139, 20
+        };
+
+        //Level Buttons
         for (int i = 0; i < levels.size(); i++)
         {
             sT = new SpriteType(LEVEL_SELECT_BUTTON_TYPE);
@@ -389,14 +437,14 @@ public class InfinityGemSagaMiniGame extends MiniGame
             sT.addState(VISIBLE_STATE, img);
             img = loadImageWithColorKey(imgPath + levelImageNames.get(i), COLOR_KEY);
             sT.addState(MOUSE_OVER_STATE, img);
-            s = new Sprite(sT, levelx, levely, 0, 0, INVISIBLE_STATE);
+            s = new Sprite(sT, levelx[i], levely[i], 0, 0, INVISIBLE_STATE);
             guiButtons.put(levels.get(i), s);
-            levelx+=50;
-            levely+=50;
-            
+            //levelx += 75;
         }
 
-
+        /*
+         * Maps
+         * */
         String secondImg = props.getProperty(InfinityGemSagaPropertyType.BAXTER_IMAGE_NAME);
         sT = new SpriteType(BAXTER_TYPE);
         img = loadImage(imgPath + secondImg);
@@ -425,7 +473,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
         s = new Sprite(sT, 5120, 0, 0, 0, INVISIBLE_STATE);
         guiDecor.put(GENOSHA_TYPE, s);
 
-
+        //Play button on the stat screen
         String statPlayButton = props.getProperty(InfinityGemSagaPropertyType.STAT_PLAY_IMAGE_BUTTON);
         sT = new SpriteType(STAT_PLAY_TYPE);
         img = loadImage(imgPath + statPlayButton);
@@ -437,7 +485,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiButtons.put(STAT_PLAY_TYPE, s);
 
 
-
+        //Quit button on the stat screen
         String statQuitButton = props.getProperty(InfinityGemSagaPropertyType.STAT_QUIT_IMAGE_BUTTON);
         sT = new SpriteType(STAT_QUIT_TYPE);
         img = loadImage(imgPath + statQuitButton);
@@ -447,10 +495,49 @@ public class InfinityGemSagaMiniGame extends MiniGame
         sT.addState(MOUSE_OVER_STATE, img);
         s = new Sprite(sT, 600, 450, 0, 0, INVISIBLE_STATE);
         guiButtons.put(STAT_QUIT_TYPE, s);
+        
+        String winQuitButton = props.getProperty(InfinityGemSagaPropertyType.STAT_QUIT_IMAGE_BUTTON);
+        sT = new SpriteType(WIN_QUIT_TYPE);
+        img = loadImage(imgPath + winQuitButton);
+        sT.addState(VISIBLE_STATE, img);
+        String winQuitMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.STAT_QUIT_MOUSE_OVER_IMAGE_BUTTON);
+        img = loadImage(imgPath + winQuitMouseOverButton);
+        sT.addState(MOUSE_OVER_STATE, img);
+        s = new Sprite(sT, 600, 450, 0, 0, INVISIBLE_STATE);
+        guiButtons.put(WIN_QUIT_TYPE, s);
 
+        String starOne = props.getProperty(InfinityGemSagaPropertyType.STARS_IMAGE_NAME);
+        sT = new SpriteType(STAR_ONE_TYPE);
+        img = loadImageWithColorKey(imgPath + starOne, COLOR_KEY);
+        sT.addState(VISIBLE_STATE, img);
+        String starsMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.STARS_IMAGE_NAME);
+        img = loadImage(imgPath + starsMouseOverButton);
+        sT.addState(MOUSE_OVER_STATE, img);
+        s = new Sprite(sT, 500, 350, 0, 0, INVISIBLE_STATE);
+        guiButtons.put(STAR_ONE_TYPE, s);
+        
+        String starTwo = props.getProperty(InfinityGemSagaPropertyType.STARS_IMAGE_NAME);
+        sT = new SpriteType(STAR_TWO_TYPE);
+        img = loadImageWithColorKey(imgPath + starTwo, COLOR_KEY);
+        sT.addState(VISIBLE_STATE, img);
+        String starTwoMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.STARS_IMAGE_NAME);
+        img = loadImage(imgPath + starTwoMouseOverButton);
+        sT.addState(MOUSE_OVER_STATE, img);
+        s = new Sprite(sT, 600, 300, 0, 0, INVISIBLE_STATE);
+        guiButtons.put(STAR_TWO_TYPE, s);
+        
+        String starThree = props.getProperty(InfinityGemSagaPropertyType.STARS_IMAGE_NAME);
+        sT = new SpriteType(STAR_THREE_TYPE);
+        img = loadImageWithColorKey(imgPath + starThree, COLOR_KEY);
+        sT.addState(VISIBLE_STATE, img);
+        String starThreeMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.STARS_IMAGE_NAME);
+        img = loadImage(imgPath + starThreeMouseOverButton);
+        sT.addState(MOUSE_OVER_STATE, img);
+        s = new Sprite(sT, 700, 350, 0, 0, INVISIBLE_STATE);
+        guiButtons.put(STAR_THREE_TYPE, s);
+        
 
-
-
+        //The actual stats menu
         String statsDialog = props.getProperty(InfinityGemSagaPropertyType.STATS_DIALOG_IMAGE_NAME);
         sT = new SpriteType(STATS_DIALOG_TYPE);
         img = loadImageWithColorKey(imgPath + statsDialog, COLOR_KEY);
@@ -460,6 +547,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
         s = new Sprite(sT, x, y, 0, 0, INVISIBLE_STATE);
         guiDecor.put(STATS_DIALOG_TYPE, s);
 
+        //Dialog pops up after a win
         String winDialog = props.getProperty(InfinityGemSagaPropertyType.WIN_DIALOG_IMAGE_NAME);
         sT = new SpriteType(WIN_DIALOG_TYPE);
         img = loadImageWithColorKey(imgPath + winDialog, COLOR_KEY);
@@ -468,16 +556,40 @@ public class InfinityGemSagaMiniGame extends MiniGame
         y = (data.getGameHeight() / 2) - (img.getHeight(null) / 2);
         s = new Sprite(sT, x, y, 0, 0, INVISIBLE_STATE);
         guiDecor.put(WIN_DIALOG_TYPE, s);
+        
+        String loseDialog = props.getProperty(InfinityGemSagaPropertyType.LOSE_DIALOG_IMAGE_NAME);
+        sT = new SpriteType(LOSE_DIALOG_TYPE);
+        img = loadImageWithColorKey(imgPath + loseDialog, COLOR_KEY);
+        sT.addState(VISIBLE_STATE, img);
+        x = (data.getGameWidth() / 2) - (img.getWidth(null) / 2);
+        y = (data.getGameHeight() / 2) - (img.getHeight(null) / 2);
+        s = new Sprite(sT, x, y, 0, 0, INVISIBLE_STATE);
+        guiDecor.put(LOSE_DIALOG_TYPE, s);
 
-        String menuButton = props.getProperty(InfinityGemSagaPropertyType.MENU_IMAGE_BUTTON);
-        sT = new SpriteType(MENU_TYPE);
+        
+        
+        //Try Again after lose
+        String tryAgainButton = props.getProperty(InfinityGemSagaPropertyType.TRY_AGAIN_IMAGE_BUTTON);
+        sT = new SpriteType(TRY_AGAIN_TYPE);
+        img = loadImage(imgPath + tryAgainButton);
+        sT.addState(VISIBLE_STATE, img);
+        String tryMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.TRY_AGAIN_MOUSE_OVER_IMAGE_BUTTON);
+        img = loadImage(imgPath + tryMouseOverButton);
+        sT.addState(MOUSE_OVER_STATE, img);
+        s = new Sprite(sT, 500, 400, 0, 0, INVISIBLE_STATE);
+        guiButtons.put(TRY_AGAIN_TYPE, s);
+
+        
+        //Back to menu button on game screen
+        String menuButton = props.getProperty(InfinityGemSagaPropertyType.MM_QUIT_IMAGE_BUTTON);
+        sT = new SpriteType(MM_QUIT_TYPE);
         img = loadImage(imgPath + menuButton);
         sT.addState(VISIBLE_STATE, img);
-        String menuMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.MENU_MOUSE_OVER_IMAGE_BUTTON);
+        String menuMouseOverButton = props.getProperty(InfinityGemSagaPropertyType.MM_QUIT_MOUSE_OVER_IMAGE_BUTTON);
         img = loadImage(imgPath + menuMouseOverButton);
         sT.addState(MOUSE_OVER_STATE, img);
         s = new Sprite(sT, 1000, 600, 0, 0, INVISIBLE_STATE);
-        guiButtons.put(MENU_TYPE, s);
+        guiButtons.put(MM_QUIT_TYPE, s);
 
         String levelBackButton = props.getProperty(InfinityGemSagaPropertyType.LEVEL_BACK_IMAGE_BUTTON);
         sT = new SpriteType(LEVEL_BACK_TYPE);
@@ -511,13 +623,15 @@ public class InfinityGemSagaMiniGame extends MiniGame
             guiButtons.get(levelFile).setActionListener(plh);
         }
 
+        //play game on menu
         PlayGameHandler pgh = new PlayGameHandler(this);
         guiButtons.get(SAGA_SCREEN_BUTTON_TYPE).setActionListener(pgh);
 
-
+        //quit game on menu
         QuitGameHandler qh = new QuitGameHandler(this);
         guiButtons.get(QUIT_BUTTON_TYPE).setActionListener(qh);
 
+        //reset game on menu
         ResetGameHandler rgh = new ResetGameHandler(this);
         guiButtons.get(SAGA_SCREEN_RESET_BUTTON_TYPE).setActionListener(rgh);
 
@@ -529,18 +643,25 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiButtons.get(DOWN_BUTTON_TYPE).setActionListener(adh);
 
 
+        StatPlayHandler sph = new StatPlayHandler(this);
+        guiButtons.get(STAT_PLAY_TYPE).setActionListener(sph);
+
         StatScreenOffHandler ssoh = new StatScreenOffHandler(this);
         guiButtons.get(STAT_QUIT_TYPE).setActionListener(ssoh);
+        
+        BackToSagaScreenHandler btssh = new BackToSagaScreenHandler(this);
+        guiButtons.get(WIN_QUIT_TYPE).setActionListener(btssh);
 
-        BackToMenuHandler btmch = new BackToMenuHandler(this);
-        guiButtons.get(MENU_TYPE).setActionListener(btmch);
+        ExitAppHandler btmch = new ExitAppHandler(this);
+        guiButtons.get(MM_QUIT_TYPE).setActionListener(btmch);
 
-        //PlayLevelHandler plh = new PlayLevelHandler(this);
-        //guiButtons.get(STAT_PLAY_TYPE).setActionListener(plh);
 
-        BackToGameScreenHandler btgsch = new BackToGameScreenHandler(this);
+        BackToSagaScreenHandler btgsch = new BackToSagaScreenHandler(this);
         guiButtons.get(LEVEL_BACK_TYPE).setActionListener(btgsch);
 
+        TryAgainHandler tah = new TryAgainHandler(this);
+        guiButtons.get(TRY_AGAIN_TYPE).setActionListener(tah);
+        
         InfinityKeyHandler ikh = new InfinityKeyHandler(this);
         this.setKeyListener(ikh);
 
@@ -612,20 +733,28 @@ public class InfinityGemSagaMiniGame extends MiniGame
 
     public void displayStatScreen()
     {
+        isStatScreen = true;
         guiButtons.get(STAT_PLAY_TYPE).setState(VISIBLE_STATE);
         guiButtons.get(STAT_QUIT_TYPE).setState(VISIBLE_STATE);
         guiButtons.get(STAT_PLAY_TYPE).setEnabled(true);
         guiButtons.get(STAT_QUIT_TYPE).setEnabled(true);
         guiDecor.get(STATS_DIALOG_TYPE).setState(VISIBLE_STATE);
-
     }
 
     public void statScreenOff()
     {
+        isStatScreen = false;
         guiButtons.get(STAT_PLAY_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(STAT_QUIT_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(STAT_PLAY_TYPE).setEnabled(false);
         guiButtons.get(STAT_QUIT_TYPE).setEnabled(false);
+        
+        guiButtons.get(STAR_ONE_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(STAR_ONE_TYPE).setEnabled(false);
+        guiButtons.get(STAR_TWO_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(STAR_TWO_TYPE).setEnabled(false);
+        guiButtons.get(STAR_THREE_TYPE).setState(INVISIBLE_STATE);
+        guiButtons.get(STAR_THREE_TYPE).setEnabled(false);
         guiDecor.get(STATS_DIALOG_TYPE).setState(INVISIBLE_STATE);
     }
 

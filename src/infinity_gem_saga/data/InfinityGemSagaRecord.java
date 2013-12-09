@@ -13,7 +13,8 @@ import java.util.Iterator;
  *
  * @author Richard McKenna
  */
-public class InfinityGemSagaRecord {
+public class InfinityGemSagaRecord
+{
     // HERE ARE ALL THE RECORDS
 
     private HashMap<String, InfinityGemSagaLevelRecord> levelRecords;
@@ -22,7 +23,8 @@ public class InfinityGemSagaRecord {
      * Default constructor, it simply creates the hash table for storing all the
      * records stored by level.
      */
-    public InfinityGemSagaRecord() {
+    public InfinityGemSagaRecord()
+    {
         levelRecords = new HashMap();
     }
 
@@ -32,32 +34,14 @@ public class InfinityGemSagaRecord {
     // - getLosses
     // - getFastestTime
     /**
-     * This method gets the games played for a given level.
-     *
-     * @param levelName Level for the request.
-     *
-     * @return The number of games played for the levelName level.
-     */
-    public int getGamesPlayed(String levelName) {
-        InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
-
-        // IF levelName ISN'T IN THE RECORD OBJECT
-        // THEN SIMPLY RETURN 0
-        if (rec == null)
-            return 0;
-        // OTHERWISE RETURN THE GAMES PLAYED
-        else
-            return rec.gamesPlayed;
-    }
-
-    /**
      * This method gets the wins for a given level.
      *
      * @param levelName Level for the request.
      *
      * @return The wins the player has earned for the levelName level.
      */
-    public int getWins(String levelName) {
+    public int getHighScore(String levelName)
+    {
         InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
 
         // IF levelName ISN'T IN THE RECORD OBJECT
@@ -66,7 +50,7 @@ public class InfinityGemSagaRecord {
             return 0;
         // OTHERWISE RETURN THE WINS
         else
-            return rec.wins;
+            return rec.highScore;
     }
 
     /**
@@ -76,7 +60,8 @@ public class InfinityGemSagaRecord {
      *
      * @return The losses the player has earned for the levelName level.
      */
-    public int getLosses(String levelName) {
+    public int getStars(String levelName)
+    {
         InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
 
         // IF levelName ISN'T IN THE RECORD OBJECT
@@ -86,30 +71,21 @@ public class InfinityGemSagaRecord {
             return 0;
         // OTHERWISE RETURN THE LOSSES
         else
-            return rec.losses;
+            return rec.stars;
     }
 
-    /**
-     * This method gets the fastest time for a given level.
-     *
-     * @param levelName Level for the request.
-     *
-     * @return The fastest time the player has earned for the levelName level.
-     */
-    public long getFastestTime(String levelName) {
+    public boolean getCompleted(String levelName)
+    {
         InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
-
-        // IF THE PLAYER HAS NEVER PLAYED THAT LEVEL, RETURN
-        // THE MAX AS A  FLAG
         if (rec == null)
-            return Long.MAX_VALUE;
-        // OTHERWISE RETURN THE FASTEST TIME
+            return false;
         else
-            return rec.fastestTime;
+            return rec.completed;
     }
-
+   
+    
     // ADD METHODS
-    // -addMahjongLevelRecord
+    // -addInfinityLevelRecord
     // -addWin
     // -addLoss
     /**
@@ -119,7 +95,8 @@ public class InfinityGemSagaRecord {
      *
      * @param rec
      */
-    public void addMahjongLevelRecord(String levelName, InfinityGemSagaLevelRecord rec) {
+    public void addInfinityLevelRecord(String levelName, InfinityGemSagaLevelRecord rec)
+    {
         levelRecords.put(levelName, rec);
     }
 
@@ -129,29 +106,34 @@ public class InfinityGemSagaRecord {
      *
      * @param levelName The level being played that the player won.
      *
-     * @param winTime The time it took to win the game.
+     * @param score The time it took to win the game.
      */
-    public void addWin(String levelName, long winTime) {
+    public void addWin(String levelName, int score, int stars, boolean win)
+    {
         // GET THE RECORD FOR levelName
         InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
 
         // IF THE PLAYER HAS NEVER PLAYED A GAME ON levelName
-        if (rec == null) {
+        if (rec == null)
+        {
             // MAKE A NEW RECORD FOR THIS LEVEL, SINCE THIS IS
             // THE FIRST TIME WE'VE PLAYED IT
             rec = new InfinityGemSagaLevelRecord();
-            rec.gamesPlayed = 1;
-            rec.wins = 1;
-            rec.losses = 0;
-            rec.fastestTime = winTime;
+            rec.stars = stars;
+            rec.highScore = score;
+            rec.completed = win;
             levelRecords.put(levelName, rec);
-        } else {
+        }
+        else
+        {
             // WE'VE PLAYED THIS LEVEL BEFORE, SO SIMPLY
             // UPDATE THE STATS
-            rec.gamesPlayed++;
-            rec.wins++;
-            if (winTime < rec.fastestTime)
-                rec.fastestTime = winTime;
+            if (stars > rec.stars)
+                rec.stars = stars;
+            if (score > rec.highScore)
+                rec.highScore = score;
+            
+             rec.completed = win;
         }
     }
 
@@ -161,49 +143,31 @@ public class InfinityGemSagaRecord {
      *
      * @param levelName The level being played that the player lost.
      */
-    public void addLoss(String levelName) {
+    public void addLoss(String levelName, int score, int stars)
+    {
         // GET THE RECORD FOR levelName
         InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
 
         // IF THE PLAYER HAS NEVER PLAYED A GAME ON levelName
-        if (rec == null) {
+        if (rec == null)
+        {
             // MAKE A NEW RECORD FOR THIS LEVEL, SINCE THIS IS
             // THE FIRST TIME WE'VE PLAYED IT
             rec = new InfinityGemSagaLevelRecord();
-            rec.gamesPlayed = 1;
-            rec.wins = 0;
-            rec.losses = 1;
-            rec.fastestTime = Long.MAX_VALUE;
+            rec.stars = stars;
+            rec.highScore = score;
+            rec.completed = false;
             levelRecords.put(levelName, rec);
-        } else {
+        }
+        else
+        {
             // WE'VE PLAYED THIS LEVEL BEFORE, SO SIMPLY
             // UPDATE THE STATS
-            rec.gamesPlayed++;
-            rec.losses++;
+            if (stars > rec.stars)
+                rec.stars = stars;
+            if (score > rec.highScore)
+                rec.highScore = score;
         }
-    }
-
-    // ADDITIONAL SERVICE METHODS
-    // -calculateWinPercentage
-    // -toByteArray
-    /**
-     * This method calculates and returns the player's win percentage for
-     * levelName.
-     *
-     * @param levelName The level for which to retreive the win percentage.
-     *
-     * @return The win percentage for levelName.
-     */
-    public double calculateWinPercentage(String levelName) {
-        // GET THE RECORD FOR leveName
-        InfinityGemSagaLevelRecord rec = levelRecords.get(levelName);
-
-        // IF NO GAMES HAVE BEEN PLAYED RETURN 0
-        if (rec == null)
-            return 0.0;
-        // OTHERWISE CALCULATE AND RETURN THE WIN PERCENTAGE
-        else
-            return (double) rec.wins / (double) rec.gamesPlayed;
     }
 
     /**
@@ -218,20 +182,21 @@ public class InfinityGemSagaRecord {
      * @throws IOException Note that this method uses a stream that writes to an
      * internal byte array, not a file. So this exception should never happen.
      */
-    public byte[] toByteArray() throws IOException {
+    public byte[] toByteArray() throws IOException
+    {
         Iterator<String> keysIt = levelRecords.keySet().iterator();
         int numLevels = levelRecords.keySet().size();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
         dos.writeInt(numLevels);
-        while (keysIt.hasNext()) {
+        while (keysIt.hasNext())
+        {
             String key = keysIt.next();
             dos.writeUTF(key);
             InfinityGemSagaLevelRecord rec = levelRecords.get(key);
-            dos.writeInt(rec.gamesPlayed);
-            dos.writeInt(rec.wins);
-            dos.writeInt(rec.losses);
-            dos.writeLong(rec.fastestTime);
+            dos.writeInt(rec.stars);
+            dos.writeInt(rec.highScore);
+            dos.writeBoolean(rec.completed);
         }
         // AND THEN RETURN IT
         return baos.toByteArray();

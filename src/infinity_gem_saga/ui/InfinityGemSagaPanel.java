@@ -112,9 +112,11 @@ public class InfinityGemSagaPanel extends JPanel
             // AND THE DIALOGS, IF THERE ARE ANY
             renderDialogs(g);
 
-            renderStats(g);
-
             renderGrid(g);
+
+            if (((InfinityGemSagaMiniGame) game).getCurrentScreenState().equals(SAGA_SCREEN_STATE)
+                    || ((InfinityGemSagaMiniGame) game).getCurrentScreenState().equals(GAME_SCREEN_STATE))
+                renderStats(g);
 
         }
         finally
@@ -177,6 +179,10 @@ public class InfinityGemSagaPanel extends JPanel
         else if (tileToRender.getState().equals(VISIBLE_STATE))
             g.drawImage(blankTileImage, (int) tileToRender.getX(), (int) tileToRender.getY(), null);
 
+        if (tileToRender.getBoardNum() == 2)
+        {
+            g.drawImage(blankTileSelectedImage, (int) tileToRender.getX(), (int) tileToRender.getY(), null);
+        }
         // THEN THE TILE IMAGE
         SpriteType bgST = tileToRender.getSpriteType();
         Image img = bgST.getStateImage(tileToRender.getState());
@@ -187,10 +193,17 @@ public class InfinityGemSagaPanel extends JPanel
         {
             g.setColor(SELECTED_TILE_COLOR);
             g.fillRoundRect((int) tileToRender.getX(), (int) tileToRender.getY(), bgST.getWidth(), bgST.getHeight(), 5, 5);
-        } else if (tileToRender.getState().equals(INCORRECTLY_SELECTED_STATE)) {
-                g.setColor(INCORRECTLY_SELECTED_TILE_COLOR);
-                g.fillRoundRect((int) tileToRender.getX(), (int) tileToRender.getY(), bgST.getWidth(), bgST.getHeight(), 5, 5);
-            }
+        }
+        else if (tileToRender.getState().equals(INCORRECTLY_SELECTED_STATE))
+        {
+            g.setColor(INCORRECTLY_SELECTED_TILE_COLOR);
+            g.fillRoundRect((int) tileToRender.getX(), (int) tileToRender.getY(), bgST.getWidth(), bgST.getHeight(), 5, 5);
+        }
+        if (tileToRender.getBoardNum() == 2)
+        {
+            g.setColor(JELLY_COLOR);
+            g.fillRoundRect((int) tileToRender.getX(), (int) tileToRender.getY(), bgST.getWidth(), bgST.getHeight(), 5, 5);
+        }
     }
 
     public void renderGrid(Graphics g)
@@ -235,20 +248,136 @@ public class InfinityGemSagaPanel extends JPanel
     public void renderStats(Graphics g)
     {
         // RENDER THE GAME TIME
+
+        /*
+         * if (tileToRender.getState().equals(SELECTED_STATE))
+         g.drawImage(blankTileSelectedImage, (int) tileToRender.getX(), (int) tileToRender.getY(), null);
+         */
         if (((InfinityGemSagaMiniGame) game).isCurrentScreenState(GAME_SCREEN_STATE)
                 && data.inProgress())
         {
 
-            String strNum = "" + data.moves;
+            String strNum = "" + data.movesLimit;
             g.setFont(new Font("default", Font.BOLD, 100));
+            g.setColor(Color.YELLOW);
             g.drawString(strNum, 100, 100);
 
             String strScore = "" + data.score;
             g.setFont(new Font("default", Font.BOLD, 100));
+            g.setColor(Color.YELLOW);
             g.drawString(strScore, 1000, 100);
         }
-        else
+
+        if (((InfinityGemSagaMiniGame) game).getGUIDecor().get(WIN_DIALOG_TYPE).getState().equals(VISIBLE_STATE))
         {
+            String strScore = "" + data.score;
+            InfinityGemSagaRecord record = ((InfinityGemSagaMiniGame) game).getPlayerRecord();
+            int stars = record.getStars(data.getCurrentLevel());
+
+            g.setFont(new Font("default", Font.BOLD, 50));
+            g.setColor(Color.RED);
+            g.drawString("You WIN!", 525, 240);
+
+            g.setFont(new Font("default", Font.BOLD, 20));
+            g.setColor(Color.RED);
+            g.drawString("Score : " + strScore, 535, 295);
+
+            if (stars >= 1)
+                ((InfinityGemSagaMiniGame) game).getGUIButtons().get(STAR_ONE_TYPE).setState(VISIBLE_STATE);
+            if (stars >= 2)
+                ((InfinityGemSagaMiniGame) game).getGUIButtons().get(STAR_TWO_TYPE).setState(VISIBLE_STATE);
+            if (stars == 3)
+                ((InfinityGemSagaMiniGame) game).getGUIButtons().get(STAR_THREE_TYPE).setState(VISIBLE_STATE);
+
+            ((InfinityGemSagaMiniGame) game).getGUIButtons().get(WIN_QUIT_TYPE).setState(VISIBLE_STATE);
+            ((InfinityGemSagaMiniGame) game).getGUIButtons().get(WIN_QUIT_TYPE).setEnabled(true);
+        }
+
+        if (((InfinityGemSagaMiniGame) game).getGUIDecor().get(LOSE_DIALOG_TYPE).getState().equals(VISIBLE_STATE))
+        {
+            g.setFont(new Font("default", Font.BOLD, 50));
+            g.setColor(Color.RED);
+            g.drawString("Game Over", 525, 240);
+            
+            ((InfinityGemSagaMiniGame) game).getGUIButtons().get(TRY_AGAIN_TYPE).setState(VISIBLE_STATE);
+            ((InfinityGemSagaMiniGame) game).getGUIButtons().get(TRY_AGAIN_TYPE).setEnabled(true);
+        }
+        
+        if (((InfinityGemSagaMiniGame) game).isStatScreen)
+        {
+            InfinityGemSagaRecord record = ((InfinityGemSagaMiniGame) game).getPlayerRecord();
+            int stars = record.getStars(data.getCurrentLevel());
+            int highScore = record.getHighScore(data.getCurrentLevel());
+
+
+            if (stars >= 1)
+                ((InfinityGemSagaMiniGame) game).getGUIButtons().get(STAR_ONE_TYPE).setState(VISIBLE_STATE);
+            if (stars >= 2)
+                ((InfinityGemSagaMiniGame) game).getGUIButtons().get(STAR_TWO_TYPE).setState(VISIBLE_STATE);
+            if (stars == 3)
+                ((InfinityGemSagaMiniGame) game).getGUIButtons().get(STAR_THREE_TYPE).setState(VISIBLE_STATE);
+
+            int target = 0;
+            String temp = data.getCurrentLevel();
+            temp = temp.substring(25);
+            String lvl = "";
+            switch (temp)
+            {
+                case "LevelOne.zom":
+                    target = LEVEL_ONE_TARGET;
+                    lvl = "Level One";
+                    break;
+                case "LevelTwo.zom":
+                    target = LEVEL_TWO_TARGET;
+                    lvl = "Level Two";
+                    break;
+                case "LevelThree.zom":
+                    target = LEVEL_THREE_TARGET;
+                    lvl = "Level Three";
+                    break;
+                case "LevelFour.zom":
+                    target = LEVEL_FOUR_TARGET;
+                    lvl = "Level Four";
+                    break;
+                case "LevelFive.zom":
+                    target = LEVEL_FIVE_TARGET;
+                    lvl = "Level Five";
+                    break;
+                case "LevelSix.zom":
+                    target = LEVEL_SIX_TARGET;
+                    lvl = "Level Six";
+                    break;
+                case "LevelSeven.zom":
+                    target = LEVEL_SEVEN_TARGET;
+                    lvl = "Level Seven";
+                    break;
+                case "LevelEight.zom":
+                    target = LEVEL_EIGHT_TARGET;
+                    lvl = "Level Eight";
+                    break;
+                case "LevelNine.zom":
+                    target = LEVEL_NINE_TARGET;
+                    lvl = "Level Nine";
+                    break;
+                case "LevelTen.zom":
+                    target = LEVEL_TEN_TARGET;
+                    lvl = "Level Ten";
+                    break;
+
+            }
+
+            g.setFont(new Font("default", Font.BOLD, 50));
+            g.setColor(Color.RED);
+            g.drawString(lvl, 525, 240);
+
+            g.setFont(new Font("default", Font.PLAIN, 20));
+            g.setColor(Color.red);
+            g.drawString("Target Points: " + target, 550, 300);
+
+
+            g.setFont(new Font("default", Font.PLAIN, 20));
+            g.setColor(Color.red);
+            g.drawString("HighScore: " + highScore, 550, 450);
         }
     }
 

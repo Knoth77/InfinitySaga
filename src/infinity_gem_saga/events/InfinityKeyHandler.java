@@ -62,6 +62,28 @@ public class InfinityKeyHandler extends KeyAdapter
             
             data.cheatThree();
         }
+        else if (ke.getKeyCode() == KeyEvent.VK_4)
+        {
+            InfinityGemSagaDataModel data = (InfinityGemSagaDataModel)game.getDataModel();
+            
+            data.cheatFour();
+        }
+        else if (ke.getKeyCode() == KeyEvent.VK_5)
+        {
+            InfinityGemSagaDataModel data = (InfinityGemSagaDataModel)game.getDataModel();
+            
+            data.cheatFive();
+        }
+        else if(ke.getKeyCode() == KeyEvent.VK_W)
+        {
+            InfinityGemSagaDataModel data = (InfinityGemSagaDataModel)game.getDataModel();
+            data.endGameAsWin();
+        }
+        else if(ke.getKeyCode() == KeyEvent.VK_L)
+        {
+            InfinityGemSagaDataModel data = (InfinityGemSagaDataModel)game.getDataModel();
+            data.endGameAsLoss();
+        }
         
     }
 }

@@ -10,8 +10,7 @@ package infinity_gem_saga.data;
  */
 public class InfinityGemSagaLevelRecord
 {
-    public int gamesPlayed;
-    public int wins;
-    public int losses;
-    public long fastestTime;
+    public int stars;
+    public int highScore;
+    public boolean completed;
 }

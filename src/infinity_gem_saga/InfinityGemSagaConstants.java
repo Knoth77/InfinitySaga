@@ -10,6 +10,13 @@ public class InfinityGemSagaConstants
     public static final String BACKGROUND_TYPE = "BACKGROUND_TYPE";
     public static final String STATS_DIALOG_TYPE = "STATS_DIALOG_TYPE";
     public static final String WIN_DIALOG_TYPE = "WIN_DIALOG_TYPE";
+    public static final String LOSE_DIALOG_TYPE = "LOSE_DIALOG_TYPE";
+    
+    public static final String STAR_ONE_TYPE = "STAR_ONE_TYPE";
+    public static final String STAR_TWO_TYPE = "STAR_TWO_TYPE";
+    public static final String STAR_THREE_TYPE = "STAR_THREE_TYPE";
+    
+    public static final String TRY_AGAIN_TYPE = "TRY_AGAIN_TYPE";
     
     public static final String SAGA_SCREEN_BUTTON_TYPE = "PLAY_BUTTON_TYPE";
     public static final String SAGA_SCREEN_RESET_BUTTON_TYPE = "RESET_BUTTON_TYPE";
@@ -21,7 +28,9 @@ public class InfinityGemSagaConstants
     public static final String STAT_PLAY_TYPE = "STAT_PLAY_TYPE";
     public static final String STAT_QUIT_TYPE = "STAT_QUIT_TYPE";
     
-    public static final String MENU_TYPE = "MENU_TYPE";
+    public static final String WIN_QUIT_TYPE = "WIN_QUIT_TYPE";
+    
+    public static final String MM_QUIT_TYPE = "MM_QUIT_TYPE";
     public static final String LEVEL_BACK_TYPE = "LEVEL_BACK_TYPE";
         
     public static final String SPACE_TYPE = "SPACE_TYPE";
@@ -58,7 +67,18 @@ public class InfinityGemSagaConstants
     public static final String SELECTED_STATE = "SELECTED_STATE";
     public static final String INCORRECTLY_SELECTED_STATE = "NOT_AVAILABLE_STATE";
     public static final String MOUSE_OVER_STATE = "MOUSE_OVER_STATE";
-            
+          
+    
+    public static final int LEVEL_ONE_TARGET = 650;
+    public static final int LEVEL_TWO_TARGET = 2500;
+    public static final int LEVEL_THREE_TARGET = 3500;
+    public static final int LEVEL_FOUR_TARGET = 8000;
+    public static final int LEVEL_FIVE_TARGET = 8000;
+    public static final int LEVEL_SIX_TARGET = 6000;
+    public static final int LEVEL_SEVEN_TARGET = 6000;
+    public static final int LEVEL_EIGHT_TARGET = 7000;
+    public static final int LEVEL_NINE_TARGET = 3500;
+    public static final int LEVEL_TEN_TARGET = 6000;
 
     public static final int OPTION_BUTTON_WIDTH = 200;
     public static final int OPTION_BUTTON_MARGIN = 5;
@@ -70,7 +90,7 @@ public class InfinityGemSagaConstants
     public static final int Z_TILE_OFFSET = 5;
 
     public static final int MAX_TILE_VELOCITY = 75;
-    public static final int STANDARD_TILE_VELOCITY = 5;
+    public static final int STANDARD_TILE_VELOCITY = 10;
     
     public static final int UP_X = 1215;
     public static final int UP_Y = 325;
@@ -88,6 +108,7 @@ public class InfinityGemSagaConstants
     public static final Color SELECTED_TILE_COLOR = new Color(255,255,0,100);
     public static final Color INCORRECTLY_SELECTED_TILE_COLOR = new Color(255, 50, 50, 100);
     public static final Color STATS_COLOR = new Color(0, 60, 0);
+    public static final Color JELLY_COLOR = new Color(139,137,137,100);
 
     public static final Font TEXT_DISPLAY_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 48);
     public static final Font DEBUG_TEXT_FONT = new Font(Font.MONOSPACED, Font.BOLD, 14);

@@ -12,11 +12,12 @@ import java.awt.event.ActionListener;
  *
  * @author Milk
  */
-public class BackToGameScreenHandler implements ActionListener
+public class TryAgainHandler implements ActionListener
 {
+
     private InfinityGemSagaMiniGame miniGame;
 
-    public BackToGameScreenHandler(InfinityGemSagaMiniGame initMiniGame)
+    public TryAgainHandler(InfinityGemSagaMiniGame initMiniGame)
     {
         miniGame = initMiniGame;
     }
@@ -24,6 +25,8 @@ public class BackToGameScreenHandler implements ActionListener
     @Override
     public void actionPerformed(ActionEvent ae)
     {
-       miniGame.switchToSagaScreen();
+            miniGame.switchToGameScreen();
+           // miniGame.getDataModel().reset(miniGame);
+        
     }
 }

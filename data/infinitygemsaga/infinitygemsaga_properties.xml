@@ -30,16 +30,23 @@
 		<property name="QUIT_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelQuitGame.gif"></property>
 		<property name="QUIT_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelQuitGameHighlighted.gif"></property>
 		
+		
+		<property name="STARS_IMAGE_NAME"				   value="./infinitygemsaga/Stars.gif"></property>
+		
 		<property name="STATS_DIALOG_IMAGE_NAME"		   value="./infinitygemsaga/StatScreen.gif"></property>
 		<property name="STAT_PLAY_IMAGE_BUTTON"		  	   value="./infinitygemsaga/StatPlayGame.gif"></property>
 		<property name="STAT_QUIT_IMAGE_BUTTON"		  	   value="./infinitygemsaga/StatQuitGame.gif"></property>
 		<property name="STAT_PLAY_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/StatPlayGameHighlighted.gif"></property>
 		<property name="STAT_QUIT_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/StatQuitGameHighlighted.gif"></property>
-		<property name="MENU_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelQuitGame.gif"></property>
-		<property name="MENU_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelQuitGameHighlighted.gif"></property>
+		<property name="MM_QUIT_IMAGE_BUTTON"				   value="./infinitygemsaga/MarvelQuitGame.gif"></property>
+		<property name="MM_QUIT_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/MarvelQuitGameHighlighted.gif"></property>
 		<property name="LEVEL_BACK_IMAGE_BUTTON"				   value="./infinitygemsaga/QuitLevel.gif"></property>
 		<property name="LEVEL_BACK_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/QuitLevelHighlighted.gif"></property>
-		<property name="WIN_DIALOG_IMAGE_NAME"		  		    value="./infinitygemsaga/WinScreen.gif"></property>
+		<property name="TRY_AGAIN_IMAGE_BUTTON"				   value="./infinitygemsaga/TryAgain.gif"></property>
+		<property name="TRY_AGAIN_MOUSE_OVER_IMAGE_BUTTON"	   value="./infinitygemsaga/TryAgainHighlighted.gif"></property>
+		
+		<property name="WIN_DIALOG_IMAGE_NAME"		  		   value="./infinitygemsaga/WinScreen.gif"></property>
+		<property name="LOSE_DIALOG_IMAGE_NAME"		  		   value="./infinitygemsaga/WinScreen.gif"></property>
 		
 		<property name="GAME_GAUNTLET_TILES"						value="./infinitygemsaga/GGauntlet.png"></property>
         
