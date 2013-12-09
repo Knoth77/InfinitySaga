@@ -1,5 +1,6 @@
 package infinity_gem_saga.ui;
 
+import infinity_gem_saga.InfinityGemSaga.InfinityGemSagaPropertyType;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -17,6 +18,7 @@ import mini_game.SpriteType;
 import static infinity_gem_saga.InfinityGemSagaConstants.*;
 import infinity_gem_saga.data.InfinityGemSagaDataModel;
 import infinity_gem_saga.data.InfinityGemSagaRecord;
+import properties_manager.PropertiesManager;
 
 /**
  * This class performs all of the rendering for the Mahjong game application.
@@ -266,6 +268,8 @@ public class InfinityGemSagaPanel extends JPanel
             g.setFont(new Font("default", Font.BOLD, 100));
             g.setColor(Color.YELLOW);
             g.drawString(strScore, 1000, 100);
+
+
         }
 
         if (((InfinityGemSagaMiniGame) game).getGUIDecor().get(WIN_DIALOG_TYPE).getState().equals(VISIBLE_STATE))
@@ -298,11 +302,11 @@ public class InfinityGemSagaPanel extends JPanel
             g.setFont(new Font("default", Font.BOLD, 50));
             g.setColor(Color.RED);
             g.drawString("Game Over", 525, 240);
-            
+
             ((InfinityGemSagaMiniGame) game).getGUIButtons().get(TRY_AGAIN_TYPE).setState(VISIBLE_STATE);
             ((InfinityGemSagaMiniGame) game).getGUIButtons().get(TRY_AGAIN_TYPE).setEnabled(true);
         }
-        
+
         if (((InfinityGemSagaMiniGame) game).isStatScreen)
         {
             InfinityGemSagaRecord record = ((InfinityGemSagaMiniGame) game).getPlayerRecord();

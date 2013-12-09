@@ -139,6 +139,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiButtons.get(TRY_AGAIN_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(TRY_AGAIN_TYPE).setEnabled(false);
 
+        
 
         guiButtons.get(MM_QUIT_TYPE).setState(VISIBLE_STATE);
         guiButtons.get(MM_QUIT_TYPE).setEnabled(true);
@@ -239,7 +240,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
     {
         isStatScreen = false;
         PropertiesManager props = PropertiesManager.getPropertiesManager();
-
+        
         guiDecor.get(BACKGROUND_TYPE).setState(GAME_SCREEN_STATE);
         guiButtons.get(LEVEL_BACK_TYPE).setState(VISIBLE_STATE);
         guiButtons.get(LEVEL_BACK_TYPE).setEnabled(true);
@@ -280,6 +281,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
         guiButtons.get(MM_QUIT_TYPE).setState(INVISIBLE_STATE);
         guiButtons.get(MM_QUIT_TYPE).setEnabled(false);
 
+        
         ArrayList<String> levels = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_OPTIONS);
 
         for (String level : levels)
@@ -414,16 +416,11 @@ public class InfinityGemSagaMiniGame extends MiniGame
         sT.addState(MOUSE_OVER_STATE, img);
         s = new Sprite(sT, DOWN_X, DOWN_Y, 0, 0, INVISIBLE_STATE);
         guiButtons.put(DOWN_BUTTON_TYPE, s);
-
+        
         ArrayList<String> levels = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_OPTIONS);
         ArrayList<String> levelImageNames = props.getPropertyOptionsList(InfinityGemSagaPropertyType.LEVEL_IMAGE_OPTIONS);
-
-        //int levelx = 33;
-        //int levely = 27;
-        int[] levelx =
-        {
-            33, 90, 75, 75, 105, 237, 315, 410, 390, 390
-        };
+        
+        int[] levelx = {33, 90, 75, 75, 105, 237, 315, 410, 390, 390};
         int[] levely =
         {
             27, 155, 280, 420, 552, 486, 375, 268, 139, 20
@@ -442,9 +439,7 @@ public class InfinityGemSagaMiniGame extends MiniGame
             //levelx += 75;
         }
 
-        /*
-         * Maps
-         * */
+        
         String secondImg = props.getProperty(InfinityGemSagaPropertyType.BAXTER_IMAGE_NAME);
         sT = new SpriteType(BAXTER_TYPE);
         img = loadImage(imgPath + secondImg);

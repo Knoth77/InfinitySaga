@@ -1469,7 +1469,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
             {
                 for (int i = 0; i < getGridColumns(); i++)
                 {
-                    gemGrid[i][gem.getGridRow()].setBoardNum(1);
+                    if (gemGrid[i][gem.getGridRow()].getBoardNum() != 0)
+                        gemGrid[i][gem.getGridRow()].setBoardNum(1);
                     dropDown(gemGrid[i][gem.getGridRow()]);
                     score += 150;
                 }
@@ -1479,7 +1480,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
             {
                 for (int i = 0; i < getGridRows(); i++)
                 {
-                    gemGrid[gem.getGridColumn()][i].setBoardNum(1);
+                    if (gemGrid[gem.getGridColumn()][i].getBoardNum() != 0)
+                        gemGrid[gem.getGridColumn()][i].setBoardNum(1);
                     dropDown(gemGrid[gem.getGridColumn()][i]);
                     score += 100;
                 }
@@ -1497,7 +1499,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col; j < col + 1; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1509,7 +1512,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j <= col; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1521,7 +1525,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col; j <= col + 1; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1533,7 +1538,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j <= col + 1; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1545,7 +1551,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j <= col; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1557,7 +1564,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j <= col + 1; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1569,7 +1577,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         for (int j = col - 1; j < col + 2; j++)
                         {
-                            gemGrid[j][i].setBoardNum(1);
+                            if (gemGrid[j][i].getBoardNum() != 0)
+                                gemGrid[j][i].setBoardNum(1);
                             dropDown(gemGrid[j][i]);
                             score += 120;
                         }
@@ -1587,7 +1596,8 @@ public class InfinityGemSagaDataModel extends MiniGameDataModel
                     {
                         if (gem.match(gemGrid[i][j]))
                         {
-                            gemGrid[i][j].setBoardNum(1);
+                            if (gemGrid[i][j].getBoardNum() != 0)
+                                gemGrid[i][j].setBoardNum(1);
                             dropDown(gemGrid[i][j]);
                             score += 150;
                         }
